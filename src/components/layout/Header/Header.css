@@ -1,0 +1,8 @@
+/* Header styling is done with Tailwind utility classes in Header.jsx.
+   Only rules Tailwind can't express cleanly live here. */
+
+/* Hide the browser's native "x" in search inputs so our pill stays clean */
+.sticky input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}

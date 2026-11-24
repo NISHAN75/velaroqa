@@ -1,0 +1,12 @@
+@keyframes hero-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-slide {
+  animation: hero-fade-in 0.5s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide { animation: none; }
+}

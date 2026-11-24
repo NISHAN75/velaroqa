@@ -1,0 +1,31 @@
+/* Hover: card lifts, image zooms slightly, arrow slides right */
+.featured-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.featured-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px -12px rgba(15, 23, 42, 0.25);
+}
+
+.featured-card .featured-img {
+  transition: transform 0.6s ease;
+}
+.featured-card:hover .featured-img {
+  transform: scale(1.06);
+}
+
+.featured-card .featured-arrow {
+  transition: transform 0.25s ease;
+}
+.featured-cta:hover .featured-arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-card,
+  .featured-card .featured-img,
+  .featured-card .featured-arrow { transition: none; }
+  .featured-card:hover,
+  .featured-card:hover .featured-img,
+  .featured-cta:hover .featured-arrow { transform: none; }
+}

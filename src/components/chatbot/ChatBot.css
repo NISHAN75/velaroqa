@@ -1,0 +1,142 @@
+/* StepNova AI chatbot – only the rules Tailwind can't express cleanly. */
+
+/* ---------- Window position, size & open/close animation ---------- */
+.chatbot-window {
+  --cb-right: 1rem;
+  --cb-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
+
+  position: fixed;
+  z-index: 60; /* above the sticky header (z-50) */
+  right: var(--cb-right);
+  bottom: var(--cb-bottom);
+  width: min(24rem, calc(100vw - 2rem));
+  height: min(40rem, calc(100vh - 6.5rem));
+  height: min(40rem, calc(100dvh - var(--cb-bottom) - 1rem));
+  max-width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.25rem;
+  background: #fff;
+  box-shadow:
+    0 24px 60px -12px rgba(15, 23, 42, 0.35),
+    0 0 0 1px rgba(15, 23, 42, 0.06);
+
+  transform-origin: bottom right;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.96);
+  transition:
+    opacity 0.2s ease,
+    transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 0.25s ease,
+    visibility 0s linear 0.22s; /* keeps it hidden from tabbing once closed */
+}
+
+.chatbot-window[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 0.25s ease,
+    visibility 0s linear 0s;
+}
+
+/* Minimized = only the header bar stays (header is h-[4.5rem]) */
+.chatbot-window[data-open="true"][data-minimized="true"] {
+  height: 4.5rem;
+}
+
+@media (min-width: 640px) {
+  .chatbot-window {
+    --cb-right: 1.5rem;
+    --cb-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+    height: min(40rem, calc(100vh - 8rem));
+    height: min(40rem, calc(100dvh - var(--cb-bottom) - 1.5rem));
+  }
+}
+
+/* ---------- Messages ---------- */
+.chatbot-msg {
+  animation: chatbot-pop 0.22s ease-out both;
+}
+
+@keyframes chatbot-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Typing dots */
+.chatbot-dot {
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+  border-radius: 9999px;
+  background: #64748b;
+  animation: chatbot-bounce 1.1s ease-in-out infinite;
+}
+.chatbot-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.chatbot-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes chatbot-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+/* ---------- Scrollbars ---------- */
+.chatbot-scroll {
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #c7d2fe transparent;
+}
+.chatbot-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.chatbot-scroll::-webkit-scrollbar-thumb {
+  background: #c7d2fe;
+  border-radius: 9999px;
+}
+
+/* Horizontal chip strip – scrolls inside itself, never the page */
+.chatbot-strip {
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.chatbot-strip::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- Respect reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .chatbot-window,
+  .chatbot-window[data-open="true"] {
+    transition: opacity 0.01s linear, visibility 0s linear 0s;
+    transform: none;
+  }
+  .chatbot-msg,
+  .chatbot-dot {
+    animation: none;
+  }
+}

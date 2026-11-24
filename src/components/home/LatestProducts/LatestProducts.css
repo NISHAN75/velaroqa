@@ -1,0 +1,12 @@
+/* "View All Products" arrow slides right on hover */
+.latest-arrow {
+  transition: transform 0.25s ease;
+}
+.latest-view-all:hover .latest-arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .latest-arrow { transition: none; }
+  .latest-view-all:hover .latest-arrow { transform: none; }
+}

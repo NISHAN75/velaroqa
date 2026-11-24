@@ -1,0 +1,21 @@
+/* Hover: background image zooms a little, arrow slides right */
+.category-card .category-img {
+  transition: transform 0.6s ease;
+}
+.category-card:hover .category-img {
+  transform: scale(1.07);
+}
+
+.category-card .category-arrow {
+  transition: transform 0.25s ease;
+}
+.category-card:hover .category-arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .category-card .category-img,
+  .category-card .category-arrow { transition: none; }
+  .category-card:hover .category-img,
+  .category-card:hover .category-arrow { transform: none; }
+}

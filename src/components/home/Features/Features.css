@@ -1,0 +1,39 @@
+/* Scroll-in reveal: items start hidden/shifted, then slide up one after another */
+.feature-item {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition-delay: calc(var(--i) * 120ms); /* stagger: 0ms, 120ms, 240ms */
+}
+
+.features-visible .feature-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Icon box: lifts on hover, icon does a small wiggle */
+.feature-icon {
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover .feature-icon {
+  transform: translateY(-3px);
+  background-color: #dbe7ff;
+  box-shadow: 0 8px 16px -6px rgba(29, 78, 216, 0.35);
+}
+
+.feature-item:hover .feature-icon svg {
+  animation: feature-wiggle 0.5s ease;
+}
+
+@keyframes feature-wiggle {
+  0%, 100% { transform: rotate(0); }
+  30%      { transform: rotate(-10deg); }
+  60%      { transform: rotate(8deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-item { opacity: 1; transform: none; transition: none; }
+  .feature-item:hover .feature-icon,
+  .feature-item:hover .feature-icon svg { transform: none; animation: none; }
+}
