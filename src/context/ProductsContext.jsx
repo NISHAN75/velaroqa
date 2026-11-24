@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import {
   fetchProducts,
   pickRandom,
@@ -15,32 +15,40 @@ export function ProductsProvider({ children }) {
     loading: true,
     error: null,
   });
+  const [reloadKey, setReloadKey] = useState(0);
+
+  // "Try again" button calls this
+  const reload = useCallback(() => {
+    setState((s) => ({ ...s, loading: true, error: null }));
+    setReloadKey((k) => k + 1);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
 
     fetchProducts(controller.signal)
       .then((products) => {
-        // 5 random featured products, picked once per page load
+        // 5 random featured products, picked once per load
         const featured = pickRandom(products, FEATURED_COUNT);
         setProductStore({ products, featured }); // for the chatbot helpers
         setState({ products, featured, loading: false, error: null });
       })
       .catch((err) => {
-        if (err.name === "AbortError") return;
+        if (controller.signal.aborted) return;
         console.error(err);
         setState((s) => ({ ...s, loading: false, error: err.message }));
       });
 
     return () => controller.abort();
-  }, []);
+  }, [reloadKey]);
 
   const value = useMemo(
     () => ({
       ...state,
+      reload,
       getProductById: (id) => state.products.find((p) => p.id === Number(id)),
     }),
-    [state]
+    [state, reload]
   );
 
   return <ProductsContext.Provider value={value}>{children}</ProductsContext.Provider>;

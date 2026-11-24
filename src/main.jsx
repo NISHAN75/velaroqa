@@ -21,7 +21,7 @@ OverlayScrollbars(document.body, {
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true }}>
+      <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true, anchors: true }}>
         <ProductsProvider>
           <App />
         </ProductsProvider>

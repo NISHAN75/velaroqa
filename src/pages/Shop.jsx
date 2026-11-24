@@ -9,7 +9,7 @@ import {
   ArrowRight,
   X,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import ProductCard from "../components/common/ProductCard/ProductCard";
 import ProductCardSkeleton from "../components/common/ProductCard/ProductCardSkeleton";
 import { useProducts } from "../context/ProductsContext";
@@ -106,9 +106,14 @@ function ProductListItem({ product }) {
 
 /* ---------- Page ---------- */
 export default function Shop() {
-  const { products, featured, loading, error } = useProducts();
+  const { products, featured, loading, error, reload } = useProducts();
 
-  const [query, setQuery] = useState("");
+  // Search text lives in the URL: /shop?q=nike
+  // (the Header search box and this page's search box are the same thing)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get("q") || "";
+  const setQuery = (value) => setSearchParams(value ? { q: value } : {}, { replace: true });
+
   const [sort, setSort] = useState("featured");
   const [view, setView] = useState("grid"); // "grid" | "list"
   const [perPage, setPerPage] = useState(8);
@@ -313,9 +318,16 @@ export default function Shop() {
           {/* Products */}
           <div className="mt-5">
             {error && (
-              <p className="py-10 text-center text-sm text-red-500">
-                Could not load products. Please refresh the page.
-              </p>
+              <div className="py-10 text-center">
+                <p className="text-sm text-red-500">Could not load products.</p>
+                <button
+                  type="button"
+                  onClick={reload}
+                  className="mt-3 rounded-lg bg-[#2563EB] px-5 py-2 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
+                >
+                  Try again
+                </button>
+              </div>
             )}
 
             {!error && loading && (

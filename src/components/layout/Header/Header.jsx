@@ -1,22 +1,14 @@
-import { useState } from "react";
-import {
-  Truck,
-  RotateCcw,
-  Search,
-  Heart,
-  ShoppingBag,
-  Menu,
-  X,
-  Footprints,
-  ChevronDown,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Search, Menu, X, Footprints } from "lucide-react";
 import "./Header.css";
 
 /* ---------- Config (edit here, not in the JSX) ---------- */
+// match = ei path gulo te thakle link ta active dekhabe
 const NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "Shop", href: "/shop" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/", match: ["/"] },
+  { label: "Shop", href: "/shop", match: ["/shop", "/product"] },
+  { label: "Contact", href: "/#contact", hash: "#contact" },
 ];
 
 const TOP_BAR_LINKS = [
@@ -24,10 +16,22 @@ const TOP_BAR_LINKS = [
   { label: "Help & Support", href: "#" },
 ];
 
+/* ---------- Which link is active on the current page ---------- */
+function isLinkActive(link, { pathname, hash }) {
+  // Contact = home page er #contact section
+  if (link.hash) return pathname === "/" && hash === link.hash;
+
+  // Home = only "/" (and not while Contact section is selected)
+  if (link.href === "/") return pathname === "/" && hash !== "#contact";
+
+  // Shop = /shop and /shop/... and /product/:id
+  return link.match.some((m) => pathname === m || pathname.startsWith(`${m}/`));
+}
+
 /* ---------- Small reusable pieces ---------- */
 export function Logo({ light = false }) {
   return (
-    <a href="/" className="flex items-center gap-2.5" aria-label="Velaroqa home">
+    <Link to="/" className="flex items-center gap-2.5" aria-label="Velaroqa home">
       <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1D4ED8] text-white shadow-sm shadow-blue-900/20">
         <Footprints className="h-5 w-5" strokeWidth={2.25} />
       </span>
@@ -43,11 +47,11 @@ export function Logo({ light = false }) {
           WALK BETTER. LIVE BOLDER.
         </span>
       </span>
-    </a>
+    </Link>
   );
 }
 
-function IconButton({ label, badge, children, onClick, className = "" }) {
+function IconButton({ label, children, onClick, className = "" }) {
   return (
     <button
       type="button"
@@ -56,33 +60,83 @@ function IconButton({ label, badge, children, onClick, className = "" }) {
       className={`relative flex h-10 w-10 items-center justify-center rounded-full text-[#0F172A] transition-colors duration-200 hover:bg-[#E0E7FF] hover:text-[#1D4ED8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] ${className}`}
     >
       {children}
-      {badge !== undefined && (
-        <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#1D4ED8] px-1 text-[10px] font-bold text-white">
-          {badge}
-        </span>
-      )}
     </button>
   );
 }
 
-function SearchField({ className = "" }) {
+// Enter chaple (ba search icon e click korle) onSubmit call hoy
+function SearchField({ value, onChange, onSubmit, className = "" }) {
   return (
-    <label
+    <form
+      role="search"
+      onSubmit={onSubmit}
       className={`flex items-center gap-2 rounded-full bg-[#E8ECFF] px-4 py-2.5 text-[#0F172A] transition-shadow duration-200 focus-within:ring-2 focus-within:ring-[#2563EB] ${className}`}
     >
-      <Search className="h-4 w-4 shrink-0 text-slate-500" />
+      <button type="submit" aria-label="Search" className="shrink-0">
+        <Search className="h-4 w-4 text-slate-500" />
+      </button>
       <input
         type="search"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         placeholder="Search shoes, brands..."
+        aria-label="Search shoes, brands"
         className="w-full bg-transparent text-sm outline-none placeholder:text-slate-500"
       />
-    </label>
+    </form>
   );
 }
 
 /* ---------- Header ---------- */
-export default function Header({ cartCount = 0, wishlistCount = 0, activePath = "/" }) {
+export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // On /shop keep the header box in sync with the ?q= in the URL
+  useEffect(() => {
+    if (location.pathname === "/shop") {
+      setSearchText(new URLSearchParams(location.search).get("q") || "");
+    }
+  }, [location.pathname, location.search]);
+
+  // Close the mobile menu whenever the page changes
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname, location.hash]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const q = searchText.trim();
+    setMenuOpen(false);
+    navigate(q ? `/shop?q=${encodeURIComponent(q)}` : "/shop");
+  };
+
+  // Contact link: on home just scroll to #contact, from other pages go to /#contact
+  const renderLink = (l, className, onClick) => {
+    const active = isLinkActive(l, location);
+    const common = {
+      key: l.label,
+      className: className(active),
+      "aria-current": active ? "page" : undefined,
+      onClick,
+    };
+
+    if (l.hash) {
+      return (
+        <a {...common} href={location.pathname === "/" ? l.hash : l.href}>
+          {l.label}
+        </a>
+      );
+    }
+    return (
+      <Link {...common} to={l.href}>
+        {l.label}
+      </Link>
+    );
+  };
 
   return (
     <header className="sticky top-0 z-50 font-['Plus_Jakarta_Sans',sans-serif]">
@@ -93,41 +147,35 @@ export default function Header({ cartCount = 0, wishlistCount = 0, activePath = 
 
           {/* Desktop nav */}
           <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
-            {NAV_LINKS.map((l) => {
-              const active = l.href === activePath;
-              return (
-                <a
-                  key={l.label}
-                  href={l.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200 ${
+            {NAV_LINKS.map((l) =>
+              renderLink(
+                l,
+                (active) =>
+                  `rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200 ${
                     active
                       ? "bg-[#E0E7FF] text-[#1D4ED8]"
                       : "text-[#0F172A] hover:bg-[#EEF2FF] hover:text-[#1D4ED8]"
-                  }`}
-                >
-                  {l.label}
-                </a>
-              );
-            })}
+                  }`
+              )
+            )}
           </nav>
 
           {/* Desktop search */}
-          <SearchField className="hidden w-64 lg:flex xl:w-72" />
+          <SearchField
+            value={searchText}
+            onChange={setSearchText}
+            onSubmit={handleSearch}
+            className="hidden w-64 lg:flex xl:w-72"
+          />
 
-          {/* Actions */}
-          <div className="flex items-center gap-1">
-            <IconButton label="Wishlist" badge={wishlistCount} className="hidden sm:flex">
-              <Heart className="h-5 w-5" />
-            </IconButton>
-            <IconButton
-              label={menuOpen ? "Close menu" : "Open menu"}
-              onClick={() => setMenuOpen((o) => !o)}
-              className="md:hidden"
-            >
-              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </IconButton>
-          </div>
+          {/* Mobile menu button */}
+          <IconButton
+            label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMenuOpen((o) => !o)}
+            className="md:hidden"
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </IconButton>
         </div>
 
         {/* Mobile / tablet panel */}
@@ -138,25 +186,24 @@ export default function Header({ cartCount = 0, wishlistCount = 0, activePath = 
         >
           <div className="overflow-hidden">
             <div className="space-y-4 px-4 py-4 sm:px-6">
-              <SearchField />
+              <SearchField
+                value={searchText}
+                onChange={setSearchText}
+                onSubmit={handleSearch}
+              />
               <nav className="flex flex-col gap-1" aria-label="Mobile">
-                {NAV_LINKS.map((l) => {
-                  const active = l.href === activePath;
-                  return (
-                    <a
-                      key={l.label}
-                      href={l.href}
-                      onClick={() => setMenuOpen(false)}
-                      className={`rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
+                {NAV_LINKS.map((l) =>
+                  renderLink(
+                    l,
+                    (active) =>
+                      `rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
                         active
                           ? "bg-[#E0E7FF] text-[#1D4ED8]"
                           : "text-[#0F172A] hover:bg-[#EEF2FF]"
-                      }`}
-                    >
-                      {l.label}
-                    </a>
-                  );
-                })}
+                      }`,
+                    () => setMenuOpen(false)
+                  )
+                )}
               </nav>
               <div className="flex items-center gap-4 border-t border-slate-200 pt-3 text-xs font-medium text-slate-600">
                 {TOP_BAR_LINKS.map((l) => (
@@ -164,7 +211,9 @@ export default function Header({ cartCount = 0, wishlistCount = 0, activePath = 
                     {l.label}
                   </a>
                 ))}
-                <span className="ml-auto rounded bg-[#E8ECFF] px-2 py-1 font-semibold text-[#0F172A]">$ BDT</span>
+                <span className="ml-auto rounded bg-[#E8ECFF] px-2 py-1 font-semibold text-[#0F172A]">
+                  $ BDT
+                </span>
               </div>
             </div>
           </div>

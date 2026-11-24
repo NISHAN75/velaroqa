@@ -9,7 +9,7 @@
 //   sizes ["39","42"]  ->  sizes [39, 42]
 
 const API_URL = (
-  import.meta.env.BACKEND_API_URL || "https://velaroqa-backend.vercel.app"
+  import.meta.env.VITE_BACKEND_API_URL || "https://velaroqa-backend.vercel.app"
 ).replace(/\/$/, "");
 
 export const NEW_DAYS = 7; // a product shows the "New" tag for this many days
@@ -49,11 +49,35 @@ export function normalizeProduct(raw) {
   };
 }
 
-export async function fetchProducts(signal) {
-  const res = await fetch(`${API_URL}/api/products`, { signal });
-  if (!res.ok) throw new Error(`Products request failed (${res.status})`);
-  const data = await res.json();
-  return (Array.isArray(data) ? data : []).map(normalizeProduct);
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Retries when the backend is waking up (Vercel cold start) or fails once.
+export async function fetchProducts(signal, { retries = 3, timeoutMs = 15000 } = {}) {
+  let lastError;
+
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const requestCtrl = new AbortController();
+    const timer = setTimeout(() => requestCtrl.abort(), timeoutMs);
+    const onAbort = () => requestCtrl.abort();
+    signal?.addEventListener("abort", onAbort);
+
+    try {
+      const res = await fetch(`${API_URL}/api/products`, { signal: requestCtrl.signal });
+      if (!res.ok) throw new Error(`Products request failed (${res.status})`);
+      const data = await res.json();
+      return (Array.isArray(data) ? data : []).map(normalizeProduct);
+    } catch (err) {
+      if (signal?.aborted) throw err; // user left the page -> stop retrying
+      lastError = err;
+      if (attempt < retries) await sleep(800 * (attempt + 1)); // 0.8s, 1.6s, 2.4s
+    } finally {
+      clearTimeout(timer);
+      signal?.removeEventListener("abort", onAbort);
+    }
+  }
+
+  if (lastError?.name === "AbortError") throw new Error("Request timed out");
+  throw lastError;
 }
 
 // Random pick (Fisher–Yates shuffle) — original array is not changed
