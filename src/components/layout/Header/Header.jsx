@@ -38,7 +38,7 @@ export function Logo({ light = false }) {
             light ? "text-white" : "text-[#0F172A]"
           }`}
         >
-          StepNova
+          Velaroqa
         </span>
         <span className="mt-1 text-[8px] font-bold tracking-[0.12em] text-[#2563EB]">
           WALK BETTER. LIVE BOLDER.
@@ -87,36 +87,6 @@ export default function Header({ cartCount = 0, wishlistCount = 0, activePath = 
 
   return (
     <header className="sticky top-0 z-50 font-['Plus_Jakarta_Sans',sans-serif]">
-      {/* Announcement bar */}
-      <div className="bg-[#0F172A] text-white">
-        <div className="mx-auto flex h-9 max-w-7xl items-center justify-between px-4 text-[11px] font-medium sm:px-6 lg:px-8">
-          <div className="flex items-center gap-5">
-            <span className="flex items-center gap-1.5">
-              <Truck className="h-3.5 w-3.5 text-[#38BDF8]" />
-              Free Delivery On Orders Over $2,000
-            </span>
-            <span className="hidden items-center gap-1.5 md:flex">
-              <RotateCcw className="h-3.5 w-3.5 text-[#38BDF8]" />
-              7-Day Hassle-Free Returns
-            </span>
-          </div>
-
-          <div className="hidden items-center gap-5 lg:flex">
-            {TOP_BAR_LINKS.map((l) => (
-              <a key={l.label} href={l.href} className="transition-colors hover:text-[#38BDF8]">
-                {l.label}
-              </a>
-            ))}
-            <button
-              type="button"
-              className="flex items-center gap-1 rounded bg-white/10 px-2 py-0.5 transition-colors hover:bg-white/20"
-            >
-              $ BDT <ChevronDown className="h-3 w-3" />
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Main bar */}
       <div className="border-b border-slate-200/70 bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
@@ -151,15 +121,6 @@ export default function Header({ cartCount = 0, wishlistCount = 0, activePath = 
             <IconButton label="Wishlist" badge={wishlistCount} className="hidden sm:flex">
               <Heart className="h-5 w-5" />
             </IconButton>
-            <IconButton label="Cart" badge={cartCount}>
-              <ShoppingBag className="h-5 w-5" />
-            </IconButton>
-            <button
-              type="button"
-              className="ml-2 hidden items-center gap-1 rounded-full bg-[#E8ECFF] px-3 py-1.5 text-xs font-semibold text-[#0F172A] transition-colors hover:bg-[#DCE3FF] md:flex"
-            >
-              $ BDT
-            </button>
             <IconButton
               label={menuOpen ? "Close menu" : "Open menu"}
               onClick={() => setMenuOpen((o) => !o)}

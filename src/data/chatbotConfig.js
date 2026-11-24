@@ -1,8 +1,8 @@
-// StepNova AI – chatbot content (all local, no AI API yet).
+// Velaroqa AI – chatbot content (all local, no AI API yet).
 // Edit the texts here, not in the components.
 
 export const CHATBOT = {
-  name: "StepNova AI",
+  name: "Velaroqa AI",
   subtitle: "Your Personal Shopping Assistant",
   placeholder: "Ask me anything...",
   maxLength: 500,

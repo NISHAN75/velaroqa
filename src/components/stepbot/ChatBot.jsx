@@ -240,6 +240,7 @@ export default function ChatBot() {
           ref={scrollRef}
           role="log"
           aria-live="polite"
+          data-lenis-prevent
           className="chatbot-scroll flex flex-1 flex-col gap-3 overflow-y-auto overflow-x-hidden bg-white px-4 py-4"
         >
           {messages.map((m) => (
@@ -278,7 +279,7 @@ export default function ChatBot() {
       <button
         type="button"
         onClick={toggleOpen}
-        aria-label={isOpen ? "Close StepNova AI chat" : "Open StepNova AI chat"}
+        aria-label={isOpen ? "Close Velaroqa AI chat" : "Open Velaroqa AI chat"}
         aria-expanded={isOpen}
         aria-controls="stepnova-chat"
         className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] right-4 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-[#1D4ED8] text-white shadow-lg shadow-blue-900/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#2563EB] hover:shadow-xl hover:shadow-blue-900/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 active:scale-95 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] sm:right-6"

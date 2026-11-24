@@ -60,6 +60,16 @@ function MessageIcon() {
   );
 }
 
+function BagIcon() {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+      <path d="M3 6h18" />
+      <path d="M16 10a4 4 0 0 1-8 0" />
+    </svg>
+  );
+}
+
 function HeartIcon({ filled }) {
   return (
     <svg className="h-4 w-4" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -95,7 +105,7 @@ export default function ProductDetails() {
   const hasDiscount =
     typeof product.discountPrice === "number" && product.discountPrice < product.price;
 
-  // "Message Now" opens WhatsApp with product, size and quantity already typed
+  // "Order Now" and "Message Now" both open WhatsApp with product, size and quantity already typed
   const messageUrl = buildOrderLink(
     { ...product, category, brand: product.brand || product.name.split(" ")[0] },
     { size: selectedSize, quantity, url: window.location.href }
@@ -200,7 +210,7 @@ export default function ProductDetails() {
                 >
                   −
                 </button>
-                <span className="w-8 text-center text-xs font-bold text-[#0F172A]">
+                <span className="w-8 text-center text-sm font-bold text-[#0F172A]">
                   {quantity}
                 </span>
                 <button
@@ -214,11 +224,22 @@ export default function ProductDetails() {
               </div>
             </div>
 
+            {/* Order Now (full width, opens the same WhatsApp message as "Message Now") */}
+            <a
+              href={messageUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#1D4ED8] px-5 text-sm font-bold text-white shadow-md shadow-blue-200 transition hover:bg-[#2563EB] active:scale-[0.99] sm:text-base"
+            >
+              <BagIcon />
+              Order Now
+            </a>
+
             {/* Actions */}
-            <div className="mt-6 flex flex-wrap items-center gap-3">
+            <div className="mt-3 flex flex-wrap items-center gap-3">
               <a
                 href={`tel:${phone}`}
-                className="inline-flex h-11 min-w-[140px] flex-1 items-center justify-center gap-2 rounded-full border border-[#1D4ED8] bg-white px-5 text-sm font-bold text-[#1D4ED8] transition hover:bg-[#EFF6FF]"
+                className="inline-flex h-11 min-w-[140px] flex-1 items-center justify-center gap-2 rounded-full border border-[#1D4ED8] bg-white px-5 text-xs sm:text-sm md:text-base font-bold text-[#1D4ED8] transition hover:bg-[#EFF6FF]"
               >
                 <PhoneIcon />
                 Call Now
@@ -227,7 +248,7 @@ export default function ProductDetails() {
                 href={messageUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-11 min-w-[140px] flex-1 items-center justify-center gap-2 rounded-full bg-[#1D4ED8] px-5 text-sm font-bold text-white shadow-md shadow-blue-200 transition hover:bg-[#2563EB]"
+                className="inline-flex h-11 min-w-[140px] flex-1 items-center justify-center gap-2 rounded-full bg-[#1D4ED8] px-5 text-xs sm:text-sm md:text-base font-bold text-white shadow-md shadow-blue-200 transition hover:bg-[#2563EB]"
               >
                 <MessageIcon />
                 Message Now

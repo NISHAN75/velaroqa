@@ -6,3 +6,33 @@ body {
   background: #ffffff;
   color: #0f172a;
 }
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+.os-theme-dark {
+  --os-size: 10px;
+  --os-handle-bg: #1d4ed8;
+  --os-handle-bg-hover: #2563eb;
+  --os-handle-bg-active: #1e40af;
+  --os-handle-border-radius: 9999px;
+  --os-track-bg: transparent;
+  --os-track-bg-hover: rgba(29, 78, 216, 0.08);
+  --os-padding-perpendicular: 2px;
+}

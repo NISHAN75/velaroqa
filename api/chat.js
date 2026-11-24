@@ -1,4 +1,4 @@
-// StepNova AI – Phase 4: serverless chat endpoint  (POST /api/chat)
+// Velaroqa AI – Phase 4: serverless chat endpoint  (POST /api/chat)
 //
 // The browser NEVER talks to Gemini directly. It talks to this function, and this
 // function (running on the server) adds the secret API key. The key lives only in
@@ -93,7 +93,7 @@ function buildCatalog() {
 }
 
 function buildSystemInstruction() {
-  return `You are StepNova AI, the friendly shopping assistant of "${siteConfig.name}", an online sneaker store in Bangladesh.
+  return `You are Velaroqa AI, the friendly shopping assistant of "${siteConfig.name}", an online sneaker store in Bangladesh.
 
 LANGUAGE
 - Reply in the language the customer uses. English -> English. Bengali (বাংলা script) or Bengali typed in English letters (Banglish) -> reply in Bengali script. Mixed -> use the language they mostly use.
