@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/layout/Header/Header";
 import Footer from "./components/layout/Footer/Footer";
 import ScrollToTop from "./components/common/ScrollToTop/ScrollToTop";
-import ChatBot from "./components/ChatBot/ChatBot.jsx";
+import ChatBot from "./components/chatBot/ChatBot";
 import Home from "./pages/Home";
 import ProductDetails from "./pages/ProductDetails";
 import NotFound from "./pages/NotFound";
