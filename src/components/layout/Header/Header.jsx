@@ -118,7 +118,6 @@ export default function Header() {
   const renderLink = (l, className, onClick) => {
     const active = isLinkActive(l, location);
     const common = {
-      key: l.label,
       className: className(active),
       "aria-current": active ? "page" : undefined,
       onClick,
@@ -126,13 +125,13 @@ export default function Header() {
 
     if (l.hash) {
       return (
-        <a {...common} href={location.pathname === "/" ? l.hash : l.href}>
+        <a key={l.label} {...common} href={location.pathname === "/" ? l.hash : l.href}>
           {l.label}
         </a>
       );
     }
     return (
-      <Link {...common} to={l.href}>
+      <Link key={l.label} {...common} to={l.href}>
         {l.label}
       </Link>
     );

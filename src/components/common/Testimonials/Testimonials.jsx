@@ -26,7 +26,7 @@ export default function Testimonials({ items = testimonials }) {
           >
             What Our Walkers Say
           </h2>
-          <p class="mt-0.5 text-[11px] text-slate-500 sm:text-xs">Discover our latest collection</p>
+          <p className="mt-0.5 text-[11px] text-slate-500 sm:text-xs">Discover our latest collection</p>
         </div>
 
         {/* Cards: 1 column on mobile, 3 on tablet and desktop */}

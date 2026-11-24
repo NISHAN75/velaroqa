@@ -7,13 +7,20 @@
 // Environment variables (set in .env.local for local work, and in Vercel settings):
 //   GEMINI_API_KEY  (required)  your Google AI Studio key
 //   GEMINI_MODEL    (optional)  defaults to DEFAULT_MODEL below
-import { products } from "../src/data/products.js";
 import { siteConfig } from "../src/data/siteConfig.js";
 
 /* ====================== Settings ====================== */
 
 const DEFAULT_MODEL = "gemini-3.1-flash-lite"; // check ai.google.dev/gemini-api/docs/models for current names
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models";
+
+// Products come from the backend API (they are no longer hard-coded in src/data/products.js).
+// NOTE: we do NOT import src/data/products.js here: it uses import.meta.env (Vite-only),
+// which does not exist when this function runs as plain Node on Vercel.
+const BACKEND_URL = (process.env.BACKEND_API_URL || process.env.VITE_BACKEND_API_URL || "https://velaroqa-backend.vercel.app").replace(/\/$/, "");
+const CATALOG_TTL_MS = 5 * 60_000; // refresh the product list every 5 minutes
+const CATALOG_TIMEOUT_MS = 5_000;
+const NEW_DAYS = 7;
 
 const MAX_BODY_BYTES = 20_000; // request size limit
 const MAX_MESSAGES = 12; // conversation history sent to the AI
@@ -33,7 +40,48 @@ const hits = new Map();
 const formatPrice = (n) => `৳${Number(n).toLocaleString("en-US")}`;
 const hasDiscount = (p) => typeof p.discountPrice === "number" && p.discountPrice < p.price;
 const finalPrice = (p) => (hasDiscount(p) ? p.discountPrice : p.price);
-const catalogById = new Map(products.map((p) => [p.id, p]));
+
+// Filled by loadCatalog() before every request
+let products = [];
+let catalogById = new Map();
+let catalogLoadedAt = 0;
+
+function normalizeProduct(raw) {
+  const price = Number(raw.price) || 0;
+  const discountPercent = Number(raw.discount) || 0;
+  const created = raw.created_at ? new Date(raw.created_at).getTime() : NaN;
+  return {
+    id: raw.id,
+    name: raw.name,
+    description: String(raw.description || "").replace(/^"+|"+$/g, "").trim(),
+    price,
+    discountPrice: discountPercent > 0 ? Math.round(price * (1 - discountPercent / 100)) : undefined,
+    isNew: Number.isFinite(created) && Date.now() - created <= NEW_DAYS * 24 * 60 * 60 * 1000,
+  };
+}
+
+async function loadCatalog() {
+  if (products.length && Date.now() - catalogLoadedAt < CATALOG_TTL_MS) return;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), CATALOG_TIMEOUT_MS);
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/products`, { signal: controller.signal });
+    if (!res.ok) throw new Error(`status ${res.status}`);
+    const data = await res.json();
+    const list = (Array.isArray(data) ? data : data?.products || []).map(normalizeProduct);
+    if (list.length) {
+      products = list;
+      catalogById = new Map(list.map((p) => [p.id, p]));
+      catalogLoadedAt = Date.now();
+    }
+  } catch (error) {
+    console.error(`[chat] Could not load products: ${error?.message || error}`);
+    // keep the old list if we have one; otherwise the handler answers with an error
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 function send(res, status, body, headers = {}) {
   res.statusCode = status;
@@ -83,7 +131,6 @@ function buildCatalog() {
         p.name,
         price,
         p.isNew ? "NEW ARRIVAL" : null,
-        p.isFeatured ? "FEATURED" : null,
         description ? `about: ${description}` : null,
       ]
         .filter(Boolean)
@@ -216,7 +263,12 @@ async function callGemini(contents) {
     clearTimeout(timer);
   }
 
-  if (!response.ok) throw new UpstreamError("upstream", response.status);
+  if (!response.ok) {
+    // Server log only (never sent to the browser): shows WHY Google refused, e.g. wrong model name or bad key
+    const detail = await response.text().catch(() => "");
+    console.error(`[chat] Gemini HTTP ${response.status} (model ${model}): ${detail.slice(0, 300)}`);
+    throw new UpstreamError("upstream", response.status);
+  }
 
   let data;
   try {
@@ -282,6 +334,9 @@ export default async function handler(req, res) {
       body = null;
     }
   }
+  await loadCatalog();
+  if (!products.length) return send(res, 502, { error: "catalog_unavailable" });
+
   const contents = buildContents(body?.messages);
   if (!contents) return send(res, 400, { error: "invalid_request" });
 
