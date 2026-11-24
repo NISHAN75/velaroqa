@@ -2,9 +2,9 @@ import { forwardRef, useState } from "react";
 import { Send } from "lucide-react";
 import { CHATBOT } from "../../data/chatbotConfig";
 
-const ChatInput = forwardRef(function ChatInput({ onSend }, inputRef) {
+const ChatInput = forwardRef(function ChatInput({ onSend, busy = false }, inputRef) {
   const [value, setValue] = useState("");
-  const canSend = value.trim().length > 0;
+  const canSend = value.trim().length > 0 && !busy; // no new message while a reply is on its way
 
   const submit = (e) => {
     e.preventDefault(); // Enter key submits the form too

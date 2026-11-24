@@ -1,10 +1,18 @@
 import { BotAvatar } from "./TypingIndicator";
+import ChatProductCard from "./ChatProductCard";
+import { getProductById } from "../../data/products";
 
 const formatTime = (date) =>
   date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 
-export default function ChatMessage({ message }) {
+export default function ChatMessage({ message, onProductClick }) {
   const isUser = message.role === "user";
+
+  // Saved ids that no longer exist in products.js are skipped safely
+  const products = (message.productIds || [])
+    .map((id) => getProductById(id))
+    .filter(Boolean);
+  const hasProducts = products.length > 0;
 
   return (
     <div
@@ -15,9 +23,9 @@ export default function ChatMessage({ message }) {
       {!isUser && <BotAvatar />}
 
       <div
-        className={`flex min-w-0 max-w-[82%] flex-col ${
-          isUser ? "items-end" : "items-start"
-        }`}
+        className={`flex min-w-0 flex-col ${
+          hasProducts ? "w-full max-w-[calc(100%-2.25rem)]" : "max-w-[82%]"
+        } ${isUser ? "items-end" : "items-start"}`}
       >
         <div
           className={`whitespace-pre-line rounded-2xl px-4 py-2.5 text-sm leading-relaxed [overflow-wrap:anywhere] ${
@@ -28,6 +36,19 @@ export default function ChatMessage({ message }) {
         >
           {message.text}
         </div>
+
+        {hasProducts && (
+          <div className="mt-2 flex w-full flex-col gap-2">
+            {products.map((product) => (
+              <ChatProductCard
+                key={product.id}
+                product={product}
+                onNavigate={onProductClick}
+              />
+            ))}
+          </div>
+        )}
+
         <span className="mt-1 px-1 text-[10px] text-slate-400">
           {formatTime(message.time)}
         </span>

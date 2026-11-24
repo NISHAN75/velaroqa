@@ -4,7 +4,10 @@ import {
   CHATBOT,
   QUICK_SUGGESTIONS,
   FALLBACK_REPLY,
+  AI,
 } from "../../data/chatbotConfig";
+import { getBotReply } from "../../utils/botReply";
+import { askAI } from "../../utils/aiClient";
 import { createMessage, loadMessages, saveMessages, clearMessages } from "../../utils/chatHistory";
 import ChatHeader from "./ChatHeader";
 import ChatMessage from "./ChatMessage";
@@ -31,9 +34,14 @@ export default function ChatBot() {
   // A restored conversation already has its welcome message
   const greeted = useRef(messages.length > 0);
   const visibleRef = useRef(false);
+  const messagesRef = useRef(messages); // latest messages, for the AI history
+  const busyRef = useRef(false); // true while a reply is on its way (blocks duplicates)
+  const conversationRef = useRef(0); // late replies from a cleared chat are ignored
+  const controllers = useRef(new Set()); // running AI requests, cancelled on clear/unmount
 
   const isVisible = isOpen && !isMinimized;
   visibleRef.current = isVisible;
+  messagesRef.current = messages;
   const isTyping = pending > 0 || greeting;
 
   /* Save every change to localStorage (an empty list removes the saved entry) */
@@ -87,30 +95,88 @@ export default function ChatBot() {
     return () => clearTimeout(t);
   }, [isVisible]);
 
-  /* Clear pending timers on unmount */
+  /* Clear pending timers and cancel AI requests on unmount */
   useEffect(() => {
     const set = timers.current;
-    return () => set.forEach(clearTimeout);
+    const requests = controllers.current;
+    return () => {
+      set.forEach(clearTimeout);
+      requests.forEach((c) => c.abort());
+    };
   }, []);
 
-  /* Phase 2: reply is still a local placeholder (no AI yet) */
-  const send = useCallback((text, reply = FALLBACK_REPLY) => {
-    const clean = text.trim();
-    if (!clean) return;
-
-    setMessages((m) => [...m, createMessage("user", clean)]);
-    setPending((p) => p + 1);
-
-    const t = setTimeout(() => {
-      timers.current.delete(t);
-      setMessages((m) => [...m, createMessage("assistant", reply)]);
-      setPending((p) => p - 1);
-      if (!visibleRef.current) setUnread(true);
-    }, CHATBOT.replyDelayMs);
-    timers.current.add(t);
+  /* Shows the assistant's answer and frees the chat for the next message */
+  const deliver = useCallback((convo, answer) => {
+    if (convo !== conversationRef.current) return; // the chat was cleared meanwhile
+    setMessages((m) => [...m, createMessage("assistant", answer.text, answer.productIds)]);
+    setPending((p) => Math.max(0, p - 1));
+    busyRef.current = false;
+    if (!visibleRef.current) setUnread(true);
   }, []);
 
-  const handleSuggestion = (item) => send(`${item.emoji} ${item.label}`, item.reply);
+  /* Local reply (quick buttons, and the safety net when the AI is unavailable) */
+  const localAnswer = (text, intent) => {
+    try {
+      return getBotReply(text, intent);
+    } catch {
+      return { text: FALLBACK_REPLY, productIds: [] };
+    }
+  };
+
+  /*
+    Sending a message:
+    - quick buttons  -> instant local answer (real product data, no AI cost)
+    - typed messages -> Gemini through /api/chat; if that fails, the local answer is used
+  */
+  const send = useCallback(
+    (text, intent) => {
+      const clean = text.trim();
+      if (!clean || busyRef.current) return; // empty, or a reply is still pending
+
+      const userMessage = createMessage("user", clean);
+      const history = [...messagesRef.current, userMessage];
+      const convo = conversationRef.current;
+
+      busyRef.current = true;
+      setMessages((m) => [...m, userMessage]);
+      setPending((p) => p + 1);
+
+      if (intent) {
+        const t = setTimeout(() => {
+          timers.current.delete(t);
+          deliver(convo, localAnswer(clean, intent));
+        }, CHATBOT.replyDelayMs);
+        timers.current.add(t);
+        return;
+      }
+
+      const controller = new AbortController();
+      controllers.current.add(controller);
+      (async () => {
+        let answer;
+        try {
+          answer = await askAI(history, controller.signal);
+        } catch (error) {
+          if (error.kind === "aborted") return; // chat cleared or closed: nothing to show
+          answer =
+            error.kind === "rate_limited"
+              ? { text: AI.rateLimitedReply, productIds: [] }
+              : localAnswer(clean); // AI down / no key / timeout: still be useful
+        } finally {
+          controllers.current.delete(controller);
+        }
+        deliver(convo, answer);
+      })();
+    },
+    [deliver]
+  );
+
+  const handleSuggestion = (item) => send(`${item.emoji} ${item.label}`, item.intent);
+
+  /* On phones the chat covers the page, so minimize it when a product is opened */
+  const handleProductClick = () => {
+    if (window.matchMedia("(max-width: 639px)").matches) setIsMinimized(true);
+  };
 
   const toggleOpen = () => {
     if (isOpen) {
@@ -136,6 +202,10 @@ export default function ChatBot() {
   const clearConversation = () => {
     timers.current.forEach(clearTimeout); // late replies must not land in the new chat
     timers.current.clear();
+    controllers.current.forEach((c) => c.abort());
+    controllers.current.clear();
+    conversationRef.current += 1;
+    busyRef.current = false;
     setPending(0);
     clearMessages();
     setMessages([]);
@@ -173,7 +243,7 @@ export default function ChatBot() {
           className="chatbot-scroll flex flex-1 flex-col gap-3 overflow-y-auto overflow-x-hidden bg-white px-4 py-4"
         >
           {messages.map((m) => (
-            <ChatMessage key={m.id} message={m} />
+            <ChatMessage key={m.id} message={m} onProductClick={handleProductClick} />
           ))}
 
           {showWelcomeChips && (
@@ -191,9 +261,9 @@ export default function ChatBot() {
           />
         )}
 
-        <ChatInput ref={inputRef} onSend={(text) => send(text)} />
+        <ChatInput ref={inputRef} busy={pending > 0} onSend={(text) => send(text)} />
         <p className="shrink-0 bg-white pb-2 text-center text-[10px] text-slate-400">
-          Preview mode: replies are placeholders for now
+          {AI.disclaimer}
         </p>
 
         {confirmClear && (

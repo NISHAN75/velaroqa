@@ -16,8 +16,10 @@ export function createId() {
 }
 
 // role: "user" | "assistant"
-export function createMessage(role, text) {
-  return { id: createId(), role, text, time: new Date() };
+// productIds (optional): ids of products shown as cards under an assistant message.
+// Only ids are stored, so prices/images are always read fresh from products.js.
+export function createMessage(role, text, productIds = []) {
+  return { id: createId(), role, text, productIds, time: new Date() };
 }
 
 /* ---------- localStorage helpers (never throw) ---------- */
@@ -40,10 +42,14 @@ function sanitize(raw) {
   if (typeof raw.text !== "string" || !raw.text.trim()) return null;
 
   const time = new Date(raw.time);
+  const productIds = Array.isArray(raw.productIds)
+    ? raw.productIds.filter((id) => Number.isFinite(id)).slice(0, 10)
+    : [];
   return {
     id: typeof raw.id === "string" && raw.id ? raw.id : createId(),
     role: raw.role,
     text: raw.text,
+    productIds,
     time: Number.isNaN(time.getTime()) ? new Date() : time,
   };
 }
@@ -106,6 +112,7 @@ export function saveMessages(messages) {
         id: m.id,
         role: m.role,
         text: m.text,
+        productIds: m.productIds?.length ? m.productIds : undefined,
         time: m.time.toISOString(),
       })),
     };
