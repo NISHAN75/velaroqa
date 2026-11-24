@@ -1,5 +1,5 @@
 import ProductCard from "../../common/ProductCard/ProductCard";
-import { products as allProducts } from "../../../data/products";
+import { useProducts } from "../../../context/ProductsContext";
 
 const getBrand = (p) => p.brand || p.name.split(" ")[0];
 const getCategory = (p) => p.category || "Sneakers";
@@ -10,6 +10,7 @@ const getCategory = (p) => p.category || "Sneakers";
  * The current product is never shown.
  */
 export default function RelatedProducts({ product, limit = 4 }) {
+  const { products: allProducts } = useProducts();
   const related = allProducts
     .filter((p) => p.id !== product.id)
     .map((p) => ({

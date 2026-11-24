@@ -1,15 +1,15 @@
-// Velaroqa AI – chatbot content (all local, no AI API yet).
+// Velaroqa – chatbot content (all local, no AI API yet).
 // Edit the texts here, not in the components.
 
 export const CHATBOT = {
-  name: "Velaroqa AI",
+  name: "Velaroqa Ai",
   subtitle: "Your Personal Shopping Assistant",
   placeholder: "Ask me anything...",
   maxLength: 500,
   greetingDelayMs: 700, // typing dots shown before the welcome message
   replyDelayMs: 900, // typing dots shown before a quick-button reply
   welcome:
-    "Hello! 👋 Welcome to StepNova.\nI'm your personal shopping assistant. I can help you discover sneakers, explore new arrivals, find the best deals and place orders.\nHow can I help you today?",
+    "Hello! 👋 Welcome to Velaroqa.\nI'm your personal shopping assistant. I can help you discover sneakers, explore new arrivals, find the best deals and place orders.\nHow can I help you today?",
 };
 
 // Phase 3: each button has an `intent`. The reply engine (utils/botReply.js)
@@ -39,7 +39,7 @@ export const AI = {
 // Phase 2: conversation history (saved in the browser's localStorage).
 // Bump `version` if the saved message format ever changes; old data is then ignored safely.
 export const STORAGE = {
-  key: "stepnova.chat.history",
+  key: "Velaroqa.chat.history",
   version: 1,
   maxMessages: 100, // only the newest messages are kept on disk
 };

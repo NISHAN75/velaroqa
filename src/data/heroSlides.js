@@ -3,11 +3,11 @@ export const heroSlides = [
     id: 1,
     badge: "Performance Series",                 // <-- badge-er text
     subtitle: "New Season • Up to 30% Off",      // <-- chhoto light-blue text
-    title: ["STEP UP YOUR", "STYLE", "WITH STEPNOVA"], // <-- heading, 3 line
+    title: ["STEP UP YOUR", "STYLE", "WITH Velaroqa"], // <-- heading, 3 line
     primaryCta: { label: "Shop Now", href: "/shop" },        // <-- white button
-    secondaryCta: { label: "Categories", href: "/categories" }, // <-- outline button
+    secondaryCta: { label: "Categories", href: "#categories" }, // <-- outline button
     image: "images/slider/hero-shoe-01.jpg",              // <-- image path (public/images/)
-    imageAlt: "Blue StepNova performance running shoe",
+    imageAlt: "Blue Velaroqa performance running shoe",
   },
   {
     id: 2,
@@ -15,9 +15,9 @@ export const heroSlides = [
     subtitle: "Fresh Drops • Free Delivery Over $2,000",
     title: ["BUILT FOR", "EVERYDAY", "CONFIDENCE"],
     primaryCta: { label: "Shop Now", href: "/shop" },
-    secondaryCta: { label: "Categories", href: "/categories" },
+    secondaryCta: { label: "Categories", href: "#categories" },
     image: "images/slider/hero-shoe-02.jpg",
-    imageAlt: "StepNova street edition shoe",
+    imageAlt: "Velaroqa street edition shoe",
   },
   {
     id: 3,
@@ -25,8 +25,8 @@ export const heroSlides = [
     subtitle: "Limited Stock • Up to 30% Off",
     title: ["WALK BETTER.", "LIVE", "BOLDER."],
     primaryCta: { label: "Shop Now", href: "/shop" },
-    secondaryCta: { label: "Categories", href: "/categories" },
+    secondaryCta: { label: "Categories", href: "#categories" },
     image: "images/slider/hero-shoe-03.jpg",
-    imageAlt: "StepNova athlete collection shoe",
+    imageAlt: "Velaroqa athlete collection shoe",
   },
 ];

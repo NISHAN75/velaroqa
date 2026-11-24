@@ -1,11 +1,15 @@
 import { Star } from "lucide-react";
-import { featuredProducts } from "../../../data/products";
+import { useProducts } from "../../../context/ProductsContext";
+import ProductCardSkeleton from "../../common/ProductCard/ProductCardSkeleton";
 import ProductCard from "../../common/ProductCard/ProductCard";
 import "./FeaturedProducts.css";
 
-export default function FeaturedProducts({ products = featuredProducts }) {
-  // Nothing flagged as featured -> render nothing instead of an empty heading.
-  if (!products.length) return null;
+export default function FeaturedProducts() {
+  // `featured` = 5 random products picked in ProductsContext
+  const { featured: products, loading } = useProducts();
+
+  // Loaded but nothing to show -> render nothing instead of an empty heading.
+  if (!loading && !products.length) return null;
 
   return (
     <section
@@ -26,9 +30,10 @@ export default function FeaturedProducts({ products = featuredProducts }) {
           </p>
         </div>
 
-        {/* Grid: 2 columns on mobile and tablet, 4 on desktop */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          {products.map((p) => (
+        {/* Grid: 2 columns on mobile, 3 on tablet, 5 on desktop (5 cards = 1 row) */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
+          {loading && <ProductCardSkeleton count={5} />}
+          {!loading && products.map((p) => (
             <ProductCard key={p.id} product={p} variant="featured" />
           ))}
         </div>

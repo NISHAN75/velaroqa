@@ -7,7 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 // (This plugin is not part of the production build.)
 function localChatApi() {
   return {
-    name: "stepnova-local-chat-api",
+    name: "Velaroqa-local-chat-api",
     apply: "serve",
     configureServer(server) {
       const env = loadEnv(server.config.mode, server.config.root, "GEMINI_");

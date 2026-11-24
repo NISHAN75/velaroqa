@@ -1,6 +1,6 @@
 
 export const siteConfig = {
-  name: "StepNova",
+  name: "Velaroqa",
   phone: "+8801872472231",
   whatsappNumber: "8801872472231",
 };

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getProductById } from "../data/products";
+import { useProducts } from "../context/ProductsContext";
 import { buildOrderLink } from "../utils/whatsapp";
 import { siteConfig } from "../data/siteConfig";
 import NotFound from "./NotFound";
@@ -80,11 +80,21 @@ function HeartIcon({ filled }) {
 
 export default function ProductDetails() {
   const { id } = useParams();
+  const { getProductById, loading } = useProducts();
   const product = getProductById(id);
 
-  const [selectedSize, setSelectedSize] = useState(42);
+  const [selectedSize, setSelectedSize] = useState(null); // null = first size is used
   const [quantity, setQuantity] = useState(1);
   const [wishlisted, setWishlisted] = useState(false);
+
+  // Direct visit to /product/10: wait for the API before deciding "not found"
+  if (loading) {
+    return (
+      <p className="py-24 text-center font-['Plus_Jakarta_Sans',sans-serif] text-sm text-slate-500">
+        Loading product...
+      </p>
+    );
+  }
 
   if (!product) {
     return (
@@ -98,6 +108,8 @@ export default function ProductDetails() {
   const sizes = product.sizes?.length
     ? product.sizes.map((s) => (typeof s === "object" ? s : { size: s }))
     : DEFAULT_SIZES;
+  // nothing picked yet -> first size of this product is selected
+  const activeSize = selectedSize ?? sizes[0]?.size;
   const features = product.features?.length ? product.features : DEFAULT_FEATURES;
   const image = product.image || product.images?.[0];
   const category = product.category || "Sneakers";
@@ -108,7 +120,7 @@ export default function ProductDetails() {
   // "Order Now" and "Message Now" both open WhatsApp with product, size and quantity already typed
   const messageUrl = buildOrderLink(
     { ...product, category, brand: product.brand || product.name.split(" ")[0] },
-    { size: selectedSize, quantity, url: window.location.href }
+    { size: activeSize, quantity, url: window.location.href }
   );
 
   return (
@@ -176,7 +188,7 @@ export default function ProductDetails() {
               <p className="text-xs font-bold text-[#0F172A]">Size:</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {sizes.map(({ size, disabled }) => {
-                  const active = selectedSize === size;
+                  const active = activeSize === size;
                   return (
                     <button
                       key={size}

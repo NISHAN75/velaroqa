@@ -13,7 +13,7 @@ export default function TypingIndicator() {
     <div
       className="chatbot-msg flex items-end gap-2"
       role="status"
-      aria-label="Velaroqa AI is typing"
+      aria-label="Velaroqa is typing"
     >
       <BotAvatar />
       <div className="flex items-center gap-1 rounded-2xl rounded-bl-md bg-[#E8ECFF] px-4 py-3.5">

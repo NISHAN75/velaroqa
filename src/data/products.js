@@ -1,101 +1,80 @@
-// Edit products here. Images go in public/images/products/
-// price          : normal price (number, taka)
-// discountPrice  : OPTIONAL. If you add it, it shows as the main price
-//                  and the normal price is shown with a line through it.
-export const latestProducts = [
-  {
-    id: 1,
-    name: "Nike Air Force 1 '07",
-    description: "Classic leather low-top with all-day cushioning and a clean, timeless look.",
-    price: 4500,
-    isFeatured: true,
-    isNew: false,
-    image: "/images/products/products-01.png",
-    href: "/shop/nike-air-force-1",
-  },
-  {
-    id: 2,
-    name: "Adidas Forum Low",
-    description: "Retro basketball style with a padded collar and a secure ankle strap.",
-    price: 5200,
-    isFeatured: true,
-    discountPrice: 4700,
-    isNew: true,
-    image: "/images/products/products-02.png",
-    href: "/shop/adidas-forum-low",
-  },
-  {
-    id: 3,
-    name: "Nike Dunk Low",
-    description: "Bold two-tone colour blocking on a durable, street-ready sole.",
-    price: 5000,
-    isFeatured: true,
-    isNew: false,
-    image: "/images/products/products-03.png",
-    href: "/shop/nike-dunk-low",
-  },
-  {
-    id: 4,
-    name: "Puma Smash v2",
-    description: "Minimal court-inspired sneaker, light and easy to wear every day.",
-    price: 3800,
-    discountPrice: 3400,
-    isFeatured: true,
-    isNew: false,
-    image: "/images/products/products-04.png",
-    href: "/shop/puma-smash-v2",
-  },
-  {
-    id: 5,
-    name: "Reebok Classic",
-    description: "Soft, flexible upper with a retro silhouette for relaxed comfort.",
-    price: 3500,
-    isFeatured: true,
-    isNew: false,
-    image: "/images/products/products-05.png",
-    href: "/shop/reebok-classic",
-  },
-  {
-    id: 6,
-    name: "New Balance 550",
-    description: "Heritage basketball design with premium leather overlays.",
-    price: 6000,
-    isFeatured: true,
-    discountPrice: 5500,
-    isNew: false,
-    image: "/images/products/products-06.png",
-    href: "/shop/new-balance-550",
-  },
-  {
-    id: 7,
-    name: "Skechers Go Walk",
-    description: "Ultra-light, breathable walking shoe with responsive cushioning.",
-    price: 4200,
-    isNew: false,
-    image: "/images/products/products-07.png",
-    href: "/shop/skechers-go-walk",
-  },
-  {
-    id: 8,
-    name: "Converse Chuck Taylor",
-    description: "The iconic high-top canvas shoe that goes with everything.The iconic high-top canvas shoe that goes with everything.The iconic high-top canvas shoe that goes with everything.The iconic high-top canvas shoe that goes with everything.The iconic high-top canvas shoe that goes with everything.",
-    price: 3900,
-    isNew: false,
-    image: "/images/products/products-08.png",
-    href: "/shop/converse-chuck-taylor",
-  },
-];
+// Products now come from the backend API (not hard-coded any more).
+//   GET {API_URL}/api/products
+//
+// Backend field        ->  what the site uses
+//   price ("2100.00")  ->  price (number)
+//   discount ("8.00")  ->  discountPrice (price minus that % — only if discount > 0)
+//   image_url          ->  image (backend URL + /uploads/...)
+//   created_at         ->  isNew (true if created in the last NEW_DAYS days)
+//   sizes ["39","42"]  ->  sizes [39, 42]
 
+const API_URL = (
+  import.meta.env.BACKEND_API_URL || "https://velaroqa-backend.vercel.app"
+).replace(/\/$/, "");
 
-// All products (shared product data)
-export const products = latestProducts;
+export const NEW_DAYS = 7; // a product shows the "New" tag for this many days
+export const FEATURED_COUNT = 5; // how many random featured cards to show
 
-// Featured products
-export const featuredProducts = products.filter(
-  (product) => product.isFeatured
-);
+const DAY_MS = 24 * 60 * 60 * 1000;
 
-// Find a product by ID
-export const getProductById = (id) => {
-  return products.find((product) => product.id === Number(id));
+/* ---------- Convert one API product into the shape the cards expect ---------- */
+export function normalizeProduct(raw) {
+  const price = Number(raw.price) || 0;
+  const discountPercent = Number(raw.discount) || 0;
+  const discountPrice =
+    discountPercent > 0 ? Math.round(price * (1 - discountPercent / 100)) : undefined;
+
+  const createdAt = raw.created_at ? new Date(raw.created_at).getTime() : NaN;
+  const isNew = Number.isFinite(createdAt) && Date.now() - createdAt <= NEW_DAYS * DAY_MS;
+
+  const imagePath = raw.image_url || "";
+  const image = /^https?:\/\//i.test(imagePath) ? imagePath : `${API_URL}${imagePath}`;
+
+  const sizes = (Array.isArray(raw.sizes) ? raw.sizes : []).map((s) => {
+    const n = Number(s);
+    return Number.isNaN(n) ? String(s) : n; // "42" -> 42, "M" stays "M"
+  });
+
+  return {
+    id: raw.id,
+    name: raw.name,
+    // backend text sometimes has a stray quote at the start/end
+    description: String(raw.description || "").replace(/^"+|"+$/g, "").trim(),
+    price,
+    discountPrice,
+    isNew,
+    image,
+    sizes,
+    createdAt: raw.created_at,
+  };
+}
+
+export async function fetchProducts(signal) {
+  const res = await fetch(`${API_URL}/api/products`, { signal });
+  if (!res.ok) throw new Error(`Products request failed (${res.status})`);
+  const data = await res.json();
+  return (Array.isArray(data) ? data : []).map(normalizeProduct);
+}
+
+// Random pick (Fisher–Yates shuffle) — original array is not changed
+export function pickRandom(list, count) {
+  const copy = [...list];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, count);
+}
+
+/* ---------- Small shared store ----------
+   The chatbot helpers (productSearch.js) are plain functions, not React
+   components, so they read the loaded products from here.
+   ProductsContext fills it as soon as the API answers. */
+let store = { products: [], featured: [] };
+
+export const setProductStore = (next) => {
+  store = next;
 };
+export const getProducts = () => store.products;
+export const getFeatured = () => store.featured;
+export const getProductById = (id) => store.products.find((p) => p.id === Number(id));

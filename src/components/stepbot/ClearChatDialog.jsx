@@ -19,18 +19,18 @@ export default function ClearChatDialog({ onCancel, onConfirm }) {
       <div
         role="alertdialog"
         aria-modal="true"
-        aria-labelledby="stepnova-clear-title"
-        aria-describedby="stepnova-clear-desc"
+        aria-labelledby="Velaroqa-clear-title"
+        aria-describedby="Velaroqa-clear-desc"
         onClick={(e) => e.stopPropagation()}
         className="chatbot-msg w-full max-w-[17rem] rounded-2xl bg-white p-5 text-center shadow-2xl"
       >
         <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-red-50 text-red-600">
           <Trash2 className="h-5 w-5" />
         </span>
-        <h3 id="stepnova-clear-title" className="mt-3 text-[15px] font-extrabold text-[#0F172A]">
+        <h3 id="Velaroqa-clear-title" className="mt-3 text-[15px] font-extrabold text-[#0F172A]">
           {CLEAR_CHAT.title}
         </h3>
-        <p id="stepnova-clear-desc" className="mt-1.5 text-[13px] leading-relaxed text-slate-500">
+        <p id="Velaroqa-clear-desc" className="mt-1.5 text-[13px] leading-relaxed text-slate-500">
           {CLEAR_CHAT.description}
         </p>
 

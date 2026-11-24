@@ -6,6 +6,7 @@ import { OverlayScrollbars } from "overlayscrollbars";
 import "overlayscrollbars/overlayscrollbars.css";
 import "./index.css";
 import App from "./App";
+import { ProductsProvider } from "./context/ProductsContext";
 
 // Page-er scrollbar overlay style-e (body-te apply)
 OverlayScrollbars(document.body, {
@@ -21,7 +22,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true }}>
-        <App />
+        <ProductsProvider>
+          <App />
+        </ProductsProvider>
       </ReactLenis>
     </BrowserRouter>
   </StrictMode>

@@ -16,19 +16,18 @@ import "./Header.css";
 const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Shop", href: "/shop" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact", href: "#contact" },
 ];
 
 const TOP_BAR_LINKS = [
-  { label: "Why StepNova", href: "#" },
+  { label: "Why Velaroqa", href: "#" },
   { label: "Help & Support", href: "#" },
 ];
 
 /* ---------- Small reusable pieces ---------- */
 export function Logo({ light = false }) {
   return (
-    <a href="/" className="flex items-center gap-2.5" aria-label="StepNova home">
+    <a href="/" className="flex items-center gap-2.5" aria-label="Velaroqa home">
       <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1D4ED8] text-white shadow-sm shadow-blue-900/20">
         <Footprints className="h-5 w-5" strokeWidth={2.25} />
       </span>

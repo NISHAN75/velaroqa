@@ -22,7 +22,7 @@ const CUSTOMER_CARE = [
 
 const CONTACT = [
   { icon: Phone, text: "+880 1700-000000" },
-  { icon: Mail, text: "support@stepnova.com" },
+  { icon: Mail, text: "support@Velaroqa.com" },
   { icon: MapPin, text: "GEC Circle, Chattogram, Bangladesh" },
 ];
 
@@ -73,14 +73,14 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#0F172A] font-['Plus_Jakarta_Sans',sans-serif] text-slate-300">
+    <footer id="contact" className="bg-[#0F172A] font-['Plus_Jakarta_Sans',sans-serif] text-slate-300">
       <div className="mx-auto max-w-7xl px-4 pb-6 pt-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.2fr] lg:gap-12">
           {/* Brand + newsletter */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Logo light />
             <p className="mt-4 max-w-sm text-xs leading-relaxed text-slate-300">
-              StepNova brings premium footwear engineered for everyday confidence and street
+              Velaroqa brings premium footwear engineered for everyday confidence and street
               performance. Built for walkers, athletes, and style creators.
             </p>
 
@@ -141,11 +141,11 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-[11px] text-slate-400 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} StepNova. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Velaroqa. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             <a href="/privacy" className="transition-colors hover:text-white">Privacy Policy</a>
             <a href="/terms" className="transition-colors hover:text-white">Terms of Service</a>
-            <span>StepNova — Walk Better. Live Bolder.</span>
+            <span>Velaroqa — Walk Better. Live Bolder.</span>
           </div>
         </div>
       </div>

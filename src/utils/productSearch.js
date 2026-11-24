@@ -1,6 +1,6 @@
-// Velaroqa AI – Phase 3: helpers that read the REAL product data (src/data/products.js).
+// Velaroqa – Phase 3: helpers that read the REAL product data (src/data/products.js).
 // Nothing here invents product information: every answer comes from products.js.
-import { products } from "../data/products";
+import { getProducts, getFeatured } from "../data/products";
 
 /* ---------- Basic product helpers ---------- */
 
@@ -18,16 +18,16 @@ export const getDiscountPercent = (p) =>
 // Same URL the product cards use (route: /product/:id)
 export const getProductUrl = (p) => `/product/${p.id}`;
 
-export const getAllProducts = () => products;
-export const getFeaturedProducts = () => products.filter((p) => p.isFeatured);
-export const getNewArrivals = () => products.filter((p) => p.isNew);
+export const getAllProducts = () => getProducts();
+export const getFeaturedProducts = () => getFeatured();
+export const getNewArrivals = () => getProducts().filter((p) => p.isNew);
 export const getDiscountedProducts = () =>
-  products
+  getProducts()
     .filter(hasDiscount)
     .sort((a, b) => getDiscountPercent(b) - getDiscountPercent(a));
 
 export const getPriceRange = () => {
-  const prices = products.map(getFinalPrice);
+  const prices = getProducts().map(getFinalPrice);
   return { min: Math.min(...prices), max: Math.max(...prices) };
 };
 
@@ -77,7 +77,7 @@ export function parseBudget(text) {
 }
 
 export function filterByBudget({ min, max }) {
-  return products
+  return getProducts()
     .filter((p) => {
       const price = getFinalPrice(p);
       return (min == null || price >= min) && (max == null || price <= max);
@@ -86,7 +86,7 @@ export function filterByBudget({ min, max }) {
 }
 
 export const getCheapest = (count = 3) =>
-  [...products].sort((a, b) => getFinalPrice(a) - getFinalPrice(b)).slice(0, count);
+  [...getProducts()].sort((a, b) => getFinalPrice(a) - getFinalPrice(b)).slice(0, count);
 
 /* ---------- Product search (by name / description) ---------- */
 
@@ -121,7 +121,7 @@ export function searchProducts(text) {
   const words = tokenize(text);
   if (words.length === 0) return [];
 
-  return products
+  return getProducts()
     .map((product) => {
       const name = product.name.toLowerCase();
       const score = words.filter((word) => name.includes(word)).length;

@@ -1,14 +1,15 @@
 import { BotAvatar } from "./TypingIndicator";
 import ChatProductCard from "./ChatProductCard";
-import { getProductById } from "../../data/products";
+import { useProducts } from "../../context/ProductsContext";
 
 const formatTime = (date) =>
   date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 
 export default function ChatMessage({ message, onProductClick }) {
   const isUser = message.role === "user";
+  const { getProductById } = useProducts();
 
-  // Saved ids that no longer exist in products.js are skipped safely
+  // Saved ids that no longer exist in the API are skipped safely
   const products = (message.productIds || [])
     .map((id) => getProductById(id))
     .filter(Boolean);

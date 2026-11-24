@@ -1,9 +1,17 @@
 import { ArrowRight } from "lucide-react";
 import ProductCard from "../../common/ProductCard/ProductCard";
-import { latestProducts } from "../../../data/products";
+import ProductCardSkeleton from "../../common/ProductCard/ProductCardSkeleton";
+import { useProducts } from "../../../context/ProductsContext";
 import "./LatestProducts.css";
 
-export default function LatestProducts({ products = latestProducts }) {
+// How many products to show in this section
+const LATEST_LIMIT = 8;
+
+export default function LatestProducts() {
+  const { products: all, loading, error } = useProducts();
+  // API already returns newest first
+  const products = all.slice(0, LATEST_LIMIT);
+
   return (
     <section
       aria-labelledby="new-arrivals-title"
@@ -32,10 +40,16 @@ export default function LatestProducts({ products = latestProducts }) {
 
           {/* Grid */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
-            {products.map((p) => (
+            {loading && <ProductCardSkeleton count={4} />}
+            {!loading && products.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
+          {error && (
+            <p className="mt-3 text-center text-xs text-red-500">
+              Could not load products. Please refresh the page.
+            </p>
+          )}
         </div>
       </div>
     </section>
