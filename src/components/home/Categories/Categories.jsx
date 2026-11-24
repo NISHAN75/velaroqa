@@ -9,7 +9,7 @@ export default function Categories({ items = categories }) {
       className="scroll-mt-20  font-['Plus_Jakarta_Sans',sans-serif]"
       id="categories"
     >
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 py-6 sm:px-6  sm:grid-cols-2 lg:grid-cols-4 lg:gap-5 lg:px-8">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 py-6 sm:px-6  sm:grid-cols-2 lg:grid-cols-4 lg:gap-5 lg:px-8">
         {items.map((cat) => (
           <a
             key={cat.id}
