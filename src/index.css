@@ -6,6 +6,10 @@ body {
   background: #ffffff;
   color: #0f172a;
 }
+button:not(:disabled),
+[role="button"] {
+  cursor: pointer;
+}
 html.lenis, html.lenis body {
   height: auto;
 }

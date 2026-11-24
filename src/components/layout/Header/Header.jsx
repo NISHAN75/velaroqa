@@ -8,7 +8,7 @@ import "./Header.css";
 const NAV_LINKS = [
   { label: "Home", href: "/", match: ["/"] },
   { label: "Shop", href: "/shop", match: ["/shop", "/product"] },
-  { label: "Contact", href: "/#contact", hash: "#contact" },
+  { label: "Contact", href: "#contact", hash: "#contact" },
 ];
 
 const TOP_BAR_LINKS = [
