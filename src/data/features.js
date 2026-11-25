@@ -11,7 +11,7 @@ export const features = [
   {
     id: 2,
     icon: RefreshCw,
-    title: "7-Day Easy Return",
+    title: "7-Day Return",
     text: "Hassle-free exchange & doorstep refund",
   },
   {

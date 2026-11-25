@@ -37,24 +37,28 @@ export default function Hero({ slides = heroSlides }) {
     >
       {/* Gradient color change korte chaile ei line-er from/via/to bodlao */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0B1730] via-[#0A3A78] to-[#0284C7]">
-        {/* Slide: desktop-e 60% content | 5% gap | 35% image */}
+        {/*
+          Slide layout (always side by side, never stacked):
+          mobile  : text 58% | image 42%
+          desktop : text 60% | 5% gap | image 35%
+          Size steps: <480px (small) -> 480px+ (medium) -> sm 640px -> md 768px -> lg 1024px -> xl 1280px
+        */}
         <div
           key={slide.id}
-          className="hero-slide grid items-center gap-5 px-5 pb-16 pt-6 sm:gap-6 sm:px-10 sm:pt-8 md:grid-cols-[6fr_0.5fr_3.5fr] md:gap-0 md:px-16 md:py-14 lg:px-20"
+          className="hero-slide grid grid-cols-[1.35fr_1fr] items-center gap-3 px-4 pb-14 pt-5 min-[480px]:gap-5 min-[480px]:px-7 min-[480px]:pb-14 min-[480px]:pt-6 sm:gap-6 sm:px-10 sm:pb-16 sm:pt-8 md:grid-cols-[6fr_0.5fr_3.5fr] md:gap-0 md:px-16 md:py-14 lg:px-20"
         >
-          {/* Text (60%) */}
-          <div className="order-2 md:order-1 md:col-start-1">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-[#BAE6FD] ring-1 ring-white/10 backdrop-blur sm:gap-2 sm:px-4 sm:py-1.5 sm:text-xs">
-              <Zap className="h-3 w-3 fill-[#FACC15] text-[#FACC15] sm:h-3.5 sm:w-3.5" />
-              {slide.badge}
+          <div className="flex min-w-0 flex-col items-start">
+            <span className="inline-flex max-w-full items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[8px] font-bold uppercase tracking-wide text-[#BAE6FD] ring-1 ring-white/10 backdrop-blur min-[480px]:gap-1.5 min-[480px]:px-3 min-[480px]:py-1 min-[480px]:text-[11px] sm:gap-2 sm:px-4 sm:py-1.5 sm:text-xs">
+              <Zap className="h-2.5 w-2.5 shrink-0 fill-[#FACC15] text-[#FACC15] min-[480px]:h-3 min-[480px]:w-3 sm:h-3.5 sm:w-3.5" />
+              <span className="truncate">{slide.badge}</span>
             </span>
 
-            <p className="mt-3 text-sm font-semibold text-[#7DD3FC] sm:mt-4 sm:text-base md:text-xl">
+            <p className="mt-2 text-[10px] font-semibold leading-snug text-[#7DD3FC] min-[480px]:mt-3 min-[480px]:text-sm sm:mt-4 sm:text-base md:text-xl">
               {slide.subtitle}
             </p>
 
-            {/* Heading size change korte: text-2xl sm:text-4xl lg:text-5xl xl:text-[64px] */}
-            <h1 className="mt-2 text-2xl font-extrabold uppercase leading-[1.1] tracking-tight text-white sm:mt-3 sm:text-4xl lg:text-5xl xl:text-[64px]">
+            {/* Heading size change korte: text-base min-[480px]:text-2xl sm:text-3xl lg:text-5xl xl:text-[64px] */}
+            <h1 className="mt-1.5 text-base font-extrabold uppercase leading-[1.1] tracking-tight text-white min-[480px]:mt-2 min-[480px]:text-2xl sm:mt-3 sm:text-3xl lg:text-5xl xl:text-[64px]">
               {slide.title.map((line) => (
                 <span key={line} className="block">
                   {line}
@@ -62,31 +66,23 @@ export default function Hero({ slides = heroSlides }) {
               ))}
             </h1>
 
-            <div className="mt-5 flex gap-3 sm:mt-7 sm:gap-4">
+            <div className="mt-3 flex flex-wrap justify-center gap-2 min-[480px]:mt-5 sm:mt-7 sm:gap-4 md:justify-start">
               {/* Shop Now -> /shop page */}
               <Link
                 to="/shop"
-                className="flex-1 rounded-lg bg-white px-4 py-2.5 text-center text-xs font-extrabold uppercase tracking-wide text-[#0F172A] transition duration-200 hover:bg-[#E0F2FE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] sm:flex-none sm:px-5 sm:py-2.5 sm:text-xs"
+                className="rounded-lg bg-white px-3 py-1.5 text-center text-[9px] font-extrabold uppercase tracking-wide text-[#0F172A] transition duration-200 hover:bg-[#E0F2FE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] min-[480px]:px-4 min-[480px]:py-2 min-[480px]:text-xs sm:px-5 sm:py-2.5"
               >
                 {slide.primaryCta.label}
               </Link>
-
-              {/* Categories -> section with id="categories" */}
-              <a
-                href="#categories"
-                className="flex-1 rounded-lg border border-white/70 px-4 py-2.5 text-center text-xs font-extrabold uppercase tracking-wide text-white transition duration-200 hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] sm:flex-none sm:px-5 sm:py-2.5 sm:text-xs"
-              >
-                {slide.secondaryCta.label}
-              </a>
             </div>
           </div>
 
-          {/* Image (35%) */}
-          <div className="order-1 flex justify-center md:order-2 md:col-start-3">
+          {/* Image (always right) */}
+          <div className="flex min-w-0 items-center justify-center md:col-start-3">
             <img
               src={slide.image}
               alt={slide.imageAlt}
-              className="block h-auto max-h-[280px] w-auto max-w-full rounded-lg object-contain shadow-2xl shadow-black/40 ring-1 ring-white/10 sm:max-h-[400px] md:max-h-[500px]"
+              className="block h-auto max-h-[280px] w-auto max-w-full rounded-lg object-contain shadow-2xl shadow-black/40 ring-1 ring-white/10 min-[480px]:max-h-[320px] sm:max-h-[400px] md:max-h-[500px]"
             />
           </div>
         </div>
