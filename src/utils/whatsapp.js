@@ -3,7 +3,7 @@ import { siteConfig } from "../data/siteConfig";
 
 // Format product price
 const formatPrice = (n) =>
-  `৳${Number(n).toLocaleString("en-US")}`;
+  `QR ${Number(n).toLocaleString("en-US")}`;
 
 /**
  * Builds a WhatsApp order link with product details.

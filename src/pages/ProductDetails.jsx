@@ -25,8 +25,14 @@ const DEFAULT_FEATURES = [
   "Non-marking rubber outsole with classic pivot circle pattern",
 ];
 
+// 199 -> "QR 199.00", 119.25 -> "QR 119.25"
 const formatPrice = (value) =>
-  typeof value === "number" ? `৳${value.toLocaleString("en-US")}` : value;
+  typeof value === "number"
+    ? `QR ${value.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`
+    : value;
 
 function ChevronRight() {
   return (
@@ -116,6 +122,10 @@ export default function ProductDetails() {
   const phone = product.phone || siteConfig.phone;
   const hasDiscount =
     typeof product.discountPrice === "number" && product.discountPrice < product.price;
+  // Always a whole number: 40.2 -> 40
+  const discountPercent = hasDiscount
+    ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
+    : 0;
 
   // "Order Now" and "Message Now" both open WhatsApp with product, size and quantity already typed
   const messageUrl = buildOrderLink(
@@ -153,6 +163,13 @@ export default function ProductDetails() {
             <div className="absolute inset-0 flex items-center justify-center text-sm text-slate-400">
               No image available
             </div>
+          )}
+
+          {/* Discount badge */}
+          {hasDiscount && (
+            <span className="absolute right-3 top-3 rounded-full bg-[#0F172A] px-3 py-1 text-xs font-bold text-[#38BDF8]">
+              -{discountPercent}%
+            </span>
           )}
         </div>
 

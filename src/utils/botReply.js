@@ -30,7 +30,7 @@ const ids = (list) => list.slice(0, MAX_CARDS).map((p) => p.id);
 const reply = (text, list = []) => ({ text, productIds: ids(list) });
 
 // "Here are 5 of our 8 sneakers:" / "Here is 1 matching sneaker:"
-// noun is singular; "s" is added when needed. suffix goes after it (e.g. " under ৳5,000").
+// noun is singular; "s" is added when needed. suffix goes after it (e.g. " under QR 5,000").
 const countLine = (list, noun, suffix = "") => {
   const n = list.length;
   if (n > MAX_CARDS) return `Here are ${MAX_CARDS} of our ${n} ${noun}s${suffix}:`;
@@ -44,7 +44,7 @@ const has = (text, pattern) => pattern.test(text);
 function showAll() {
   const list = getAllProducts();
   return reply(
-    `${countLine(list, "sneaker")}\nTell me your budget (like “under ৳4,500”) or a brand (like “Nike”) and I'll narrow it down.`,
+    `${countLine(list, "sneaker")}\nTell me your budget (like “under QR 4,500”) or a brand (like “Nike”) and I'll narrow it down.`,
     list
   );
 }

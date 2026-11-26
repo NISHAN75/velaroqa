@@ -25,7 +25,7 @@ const SORT_OPTIONS = [
   { value: "name", label: "Name: A–Z" },
 ];
 
-const formatPrice = (n) => `৳${Number(n).toLocaleString("en-US")}`;
+const formatPrice = (n) => `QR ${Number(n).toLocaleString("en-US")}`;
 const hasDiscount = (p) => typeof p.discountPrice === "number" && p.discountPrice < p.price;
 const finalPrice = (p) => (hasDiscount(p) ? p.discountPrice : p.price);
 const brandOf = (p) => p.brand || p.name.split(" ")[0];
@@ -260,7 +260,7 @@ export default function Shop() {
           {showFilters && (
             <div className="mt-3 flex flex-wrap items-end gap-4 rounded-xl bg-white p-4 ring-1 ring-slate-200/60">
               <div>
-                <p className="mb-1 text-[11px] font-bold text-[#0F172A]">Price (৳)</p>
+                <p className="mb-1 text-[11px] font-bold text-[#0F172A]">Price (QR )</p>
                 <div className="flex items-center gap-2">
                   <input
                     type="number"

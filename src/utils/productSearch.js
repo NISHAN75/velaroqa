@@ -4,7 +4,7 @@ import { getProducts, getFeatured } from "../data/products";
 
 /* ---------- Basic product helpers ---------- */
 
-export const formatPrice = (n) => `৳${Number(n).toLocaleString("en-US")}`;
+export const formatPrice = (n) => `QR ${Number(n).toLocaleString("en-US")}`;
 
 export const hasDiscount = (p) =>
   typeof p.discountPrice === "number" && p.discountPrice < p.price;

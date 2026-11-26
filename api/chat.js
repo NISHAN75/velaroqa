@@ -37,7 +37,7 @@ const hits = new Map();
 
 /* ====================== Small helpers ====================== */
 
-const formatPrice = (n) => `৳${Number(n).toLocaleString("en-US")}`;
+const formatPrice = (n) => `QR ${Number(n).toLocaleString("en-US")}`;
 const hasDiscount = (p) => typeof p.discountPrice === "number" && p.discountPrice < p.price;
 const finalPrice = (p) => (hasDiscount(p) ? p.discountPrice : p.price);
 
@@ -148,7 +148,7 @@ LANGUAGE
 
 STYLE
 - Warm, helpful, short: usually 1 to 4 sentences. Plain text only: no markdown, no tables, no bullet symbols, at most 1 or 2 emojis.
-- Prices are in Bangladeshi Taka, written like ৳4,500.
+- Prices are in Bangladeshi Taka, written like QR 4,500.
 
 PRODUCT RULES (very important)
 - The CATALOG below is your ONLY source of truth about products. Recommend only products from it.

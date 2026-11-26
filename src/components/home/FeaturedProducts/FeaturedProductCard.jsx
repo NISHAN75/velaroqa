@@ -6,7 +6,7 @@ import { buildOrderLink } from "../../../utils/whatsapp";
 import "./FeaturedProducts.css";
 
 const formatPrice = (n) =>
-  `৳${n.toLocaleString("en-US")}`;
+  `QR ${n.toLocaleString("en-US")}`;
 
 export default function FeaturedProductCard({ product }) {
   const {

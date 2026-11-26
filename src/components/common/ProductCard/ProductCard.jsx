@@ -3,7 +3,14 @@ import { ArrowRight } from "lucide-react";
 import { buildOrderLink } from "../../../utils/whatsapp";
 import "./ProductCard.css";
 
-const formatPrice = (n) => `৳${n.toLocaleString("en-US")}`;
+const CURRENCY = "QR";
+
+// 199 -> "QR 199.00", 119.25 -> "QR 119.25", 1500 -> "QR 1,500.00"
+const formatPrice = (n) =>
+  `${CURRENCY} ${Number(n).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 
 /**
  * One card for every product grid.
@@ -20,7 +27,12 @@ export default function ProductCard({ product, variant = "default" }) {
   const category = product.category || "Sneakers";
 
   const hasDiscount = typeof discountPrice === "number" && discountPrice < price;
-  const discountPercent = hasDiscount ? Math.round(((price - discountPrice) / price) * 100) : 0;
+
+  // Always a whole number: 40.2 -> 40, 33.33 -> 33
+  const discountPercent = hasDiscount
+    ? Math.round(((price - discountPrice) / price) * 100)
+    : 0;
+
   const productUrl = `/product/${id}`;
 
   const ctaClass =
