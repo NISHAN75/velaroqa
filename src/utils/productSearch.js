@@ -1,4 +1,4 @@
-// Velaroqa – Phase 3: helpers that read the REAL product data (src/data/products.js).
+// velaro – Phase 3: helpers that read the REAL product data (src/data/products.js).
 // Nothing here invents product information: every answer comes from products.js.
 import { getProducts, getFeatured } from "../data/products";
 

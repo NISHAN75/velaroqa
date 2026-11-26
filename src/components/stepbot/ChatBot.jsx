@@ -221,7 +221,7 @@ export default function ChatBot() {
     <>
       {/* ---------- Chat window ---------- */}
       <section
-        id="Velaroqa-chat"
+        id="velaro-chat"
         role="dialog"
         aria-label={`${CHATBOT.name} chat`}
         data-open={isOpen}
@@ -279,9 +279,9 @@ export default function ChatBot() {
       <button
         type="button"
         onClick={toggleOpen}
-        aria-label={isOpen ? "Close Velaroqa chat" : "Open Velaroqa chat"}
+        aria-label={isOpen ? "Close velaro chat" : "Open velaro chat"}
         aria-expanded={isOpen}
-        aria-controls="Velaroqa-chat"
+        aria-controls="velaro-chat"
         className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] right-4 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-[#1D4ED8] text-white shadow-lg shadow-blue-900/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#2563EB] hover:shadow-xl hover:shadow-blue-900/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 active:scale-95 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] sm:right-6"
       >
         <MessageCircle

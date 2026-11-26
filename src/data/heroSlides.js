@@ -3,11 +3,11 @@ export const heroSlides = [
     id: 1,
     badge: "Performance Series",                 // <-- badge-er text
     subtitle: "New Season • Up to 30% Off",      // <-- chhoto light-blue text
-    title: ["STEP UP YOUR", "STYLE", "WITH Velaroqa"], // <-- heading, 3 line
+    title: ["STEP UP YOUR", "STYLE", "WITH velaro"], // <-- heading, 3 line
     primaryCta: { label: "Shop Now", href: "/shop" },        // <-- white button
     secondaryCta: { label: "Categories", href: "#categories" }, // <-- outline button
     image: "images/slider/hero-shoe-01.jpg",              // <-- image path (public/images/)
-    imageAlt: "Blue Velaroqa performance running shoe",
+    imageAlt: "Blue velaro performance running shoe",
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ export const heroSlides = [
     primaryCta: { label: "Shop Now", href: "/shop" },
     secondaryCta: { label: "Categories", href: "#categories" },
     image: "images/slider/hero-shoe-02.jpg",
-    imageAlt: "Velaroqa street edition shoe",
+    imageAlt: "velaro street edition shoe",
   },
   {
     id: 3,
@@ -27,6 +27,6 @@ export const heroSlides = [
     primaryCta: { label: "Shop Now", href: "/shop" },
     secondaryCta: { label: "Categories", href: "#categories" },
     image: "images/slider/hero-shoe-03.jpg",
-    imageAlt: "Velaroqa athlete collection shoe",
+    imageAlt: "velaro athlete collection shoe",
   },
 ];

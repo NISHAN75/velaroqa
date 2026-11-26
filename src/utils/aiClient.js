@@ -1,4 +1,4 @@
-// Velaroqa – Phase 4: browser side of the AI chat.
+// velaro – Phase 4: browser side of the AI chat.
 // Talks only to OUR server (/api/chat). The Gemini key is never in the browser.
 import { CHATBOT, AI } from "../data/chatbotConfig";
 

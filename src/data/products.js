@@ -9,7 +9,7 @@
 //   sizes ["39","42"]  ->  sizes [39, 42]
 
 const API_URL = (
-  import.meta.env.VITE_BACKEND_API_URL || "https://velaroqa-backend.vercel.app"
+  import.meta.env.VITE_BACKEND_API_URL || "https://server.velaroqa.com"
 ).replace(/\/$/, "");
 
 export const NEW_DAYS = 7; // a product shows the "New" tag for this many days

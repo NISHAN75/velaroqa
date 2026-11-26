@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Facebook, Youtube, Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, MapPin } from "lucide-react";
 import { Logo } from "../Header/Header";
 import "./Footer.css";
 
@@ -7,7 +7,6 @@ import "./Footer.css";
 const QUICK_LINKS = [
   { label: "Home", href: "/" },
   { label: "Shop", href: "/shop" },
-  { label: "About Us", href: "/about" },
   { label: "Contact Us", href: "/contact" },
   { label: "Size Guide", href: "/size-guide" },
 ];
@@ -21,24 +20,18 @@ const CUSTOMER_CARE = [
 ];
 
 const CONTACT = [
-  { icon: Phone, text: "+880 1700-000000" },
-  { icon: Mail, text: "support@Velaroqa.com" },
-  { icon: MapPin, text: "GEC Circle, Chattogram, Bangladesh" },
+  { icon: Phone, text: "+97455296021", href: "tel:+97455296021" },
+  { icon: Mail, text: "admin@velaroqa.com", href: "mailto:admin@velaroqa.com" },
+  {
+    icon: MapPin,
+    text: "Al Muntazah, Doha, Qatar, 10295",
+    href: "https://www.bing.com/maps/search?v=2&pc=FACEBK&mid=8100&mkt=en-US&FORM=FBKPL1&q=Al+Muntazah%2C+Doha%2C+Qatar%2C+10295&cp=25.265549%7E51.523525&lvl=16&style=r",
+  },
 ];
 
-// lucide-react has no TikTok icon, so a small inline SVG is used (no extra package).
-const TikTok = (props) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-    <path d="M16.6 3c.3 2.3 1.6 3.7 3.9 3.9v3.1c-1.4.1-2.7-.3-3.9-1.1v6.1c0 3.9-3.2 6-6.2 5.4-2.5-.5-4.3-2.8-4-5.4.3-2.9 2.9-4.9 5.8-4.4v3.2c-1.5-.5-3 .5-3 2 0 1.3 1.1 2.2 2.3 2 1-.2 1.6-1 1.6-2.1V3h3.5z" />
-  </svg>
-);
-
 const SOCIALS = [
-  { label: "Facebook", icon: Facebook, href: "#" },
-  { label: "YouTube", icon: Youtube, href: "#" },
-  { label: "LinkedIn", icon: Linkedin, href: "#" },
-  { label: "TikTok", icon: TikTok, href: "#" },
-  { label: "Instagram", icon: Instagram, href: "#" },
+  { label: "Facebook", icon: Facebook, href: "https://www.facebook.com/akaglobalshop?rdid=ZHUSHHp3BxTvNND3&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1GnmQ6agFA%2F#" },
+  { label: "Instagram", icon: Instagram, href: "https://www.instagram.com/velarofashion_974" },
 ];
 
 /* ---------- Reusable pieces ---------- */
@@ -80,7 +73,7 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-1">
             <Logo light />
             <p className="mt-4 max-w-sm text-xs leading-relaxed text-slate-300">
-              Velaroqa brings premium footwear engineered for everyday confidence and street
+              velaro brings premium footwear engineered for everyday confidence and street
               performance. Built for walkers, athletes, and style creators.
             </p>
 
@@ -125,14 +118,22 @@ export default function Footer() {
           <LinkColumn title="QUICK LINKS" links={QUICK_LINKS} />
           <LinkColumn title="CUSTOMER CARE" links={CUSTOMER_CARE} />
 
-          {/* Contact (placeholder content) */}
+          {/* Contact (clickable: tel, mailto, Google Maps) */}
           <div>
             <h3 className="mb-4 text-[11px] font-bold tracking-[0.1em] text-[#38BDF8]">CONTACT</h3>
             <ul className="space-y-3">
-              {CONTACT.map(({ icon: Icon, text }) => (
-                <li key={text} className="flex items-start gap-2.5 text-xs text-slate-300">
-                  <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#38BDF8]" />
-                  {text}
+              {CONTACT.map(({ icon: Icon, text, href }) => (
+                <li key={text}>
+                  <a
+                    href={href}
+                    {...(href.startsWith("http")
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                    className="flex items-start gap-2.5 text-xs text-slate-300 transition-colors duration-200 hover:text-white"
+                  >
+                    <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#38BDF8]" />
+                    {text}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -141,11 +142,11 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-[11px] text-slate-400 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} Velaroqa. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} velaro. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             <a href="/privacy" className="transition-colors hover:text-white">Privacy Policy</a>
             <a href="/terms" className="transition-colors hover:text-white">Terms of Service</a>
-            <span>Velaroqa — Walk Better. Live Bolder.</span>
+            <span>velaro — Walk Better. Live Bolder.</span>
           </div>
         </div>
       </div>

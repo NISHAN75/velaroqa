@@ -1,4 +1,4 @@
-// Velaroqa – Phase 3: reply engine.
+// velaro – Phase 3: reply engine.
 //
 // This is NOT real AI. It is a simple rule-based "brain" that understands a few
 // shopping requests and answers with REAL data from products.js.

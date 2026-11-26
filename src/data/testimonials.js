@@ -13,7 +13,7 @@ export const testimonials = [
     name: "Sabrina Akhter",
     city: "Chittagong",
     rating: 5,
-    text: "Velaroqa's customer service helped me swap sizes in just two days without any stress. Best shoe shopping experience!",
+    text: "velaro's customer service helped me swap sizes in just two days without any stress. Best shoe shopping experience!",
   },
   {
     id: 3,
