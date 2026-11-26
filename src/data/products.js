@@ -21,9 +21,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 export function normalizeProduct(raw) {
   const price = Number(raw.price) || 0;
   const discountPercent = Number(raw.discount) || 0;
-  const discountPrice =
-    discountPercent > 0 ? Math.round(price * (1 - discountPercent / 100)) : undefined;
-
+  const discountPrice = discountPercent > 0 ? Math.round(price * (100 - discountPercent)) / 100: undefined;
   const createdAt = raw.created_at ? new Date(raw.created_at).getTime() : NaN;
   const isNew = Number.isFinite(createdAt) && Date.now() - createdAt <= NEW_DAYS * DAY_MS;
 

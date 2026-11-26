@@ -31,22 +31,12 @@ function isLinkActive(link, { pathname, hash }) {
 /* ---------- Small reusable pieces ---------- */
 export function Logo({ light = false }) {
   return (
-    <Link to="/" className="flex items-center gap-2.5" aria-label="velaro home">
-      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1D4ED8] text-white shadow-sm shadow-blue-900/20">
-        <Footprints className="h-5 w-5" strokeWidth={2.25} />
-      </span>
-      <span className="flex flex-col leading-none">
-        <span
-          className={`text-[20px] font-extrabold tracking-tight ${
-            light ? "text-white" : "text-[#0F172A]"
-          }`}
-        >
-          velaro
-        </span>
-        <span className="mt-1 text-[8px] font-bold tracking-[0.12em] text-[#2563EB]">
-          WALK BETTER. LIVE BOLDER.
-        </span>
-      </span>
+    <Link to="/" className="flex items-center" aria-label="Velaro home">
+      <img
+        src="/images/logo/velaro.jpeg"
+        alt="Velaro"
+        className="h-15 w-auto object-contain"
+      />
     </Link>
   );
 }
