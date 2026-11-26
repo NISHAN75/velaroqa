@@ -141,20 +141,20 @@ export default function ProductDetails() {
         </nav>
 
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
-          {/* Image */}
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-[#E2E8F0] bg-[#E8EDF5] shadow-sm lg:aspect-auto lg:h-full lg:min-h-[360px]">
-            {image ? (
-              <img
-                src={image}
-                alt={product.name}
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-sm text-slate-400">
-                No image available
-              </div>
-            )}
-          </div>
+        {/* Image */}
+        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-[#E2E8F0] bg-white shadow-sm lg:aspect-auto lg:h-full lg:min-h-[360px]">
+          {image ? (
+            <img
+              src={image}
+              alt={product.name}
+              className="absolute inset-0 h-full w-full object-contain"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-sm text-slate-400">
+              No image available
+            </div>
+          )}
+        </div>
 
           {/* Info */}
           <div className="flex flex-col">

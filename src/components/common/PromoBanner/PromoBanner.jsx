@@ -10,7 +10,7 @@ const PROMO = {
   code: "STEP30",
   buttonText: "Shop Now",
   buttonLink: "/shop",
-  image: "/images/products/products-08.png", // put your image in public/images/promo/
+  image: "/images/promo/first-order.png", // put your image in public/images/promo/
   imageAlt: "Black and orange running shoe",
 };
 

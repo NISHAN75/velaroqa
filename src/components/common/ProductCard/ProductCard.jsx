@@ -36,13 +36,13 @@ export default function ProductCard({ product, variant = "default" }) {
         to={productUrl}
         tabIndex={-1}
         aria-hidden="true"
-        className="relative block aspect-[4/3] overflow-hidden bg-[#F3F6FB]"
+        className="relative block aspect-[4/3] overflow-hidden bg-white"
       >
         <img
           src={image}
           alt=""
           loading="lazy"
-          className="product-img h-full w-full object-cover"
+          className="product-img h-full w-full object-contain"
         />
 
         {/* Badges */}
