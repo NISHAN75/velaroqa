@@ -6,7 +6,7 @@ export const features = [
     id: 1,
     icon: Truck,
     title: "Free Delivery",
-    text: "On all national orders over QR 2,000",
+    text: "On all orders, always free",
   },
   {
     id: 2,
