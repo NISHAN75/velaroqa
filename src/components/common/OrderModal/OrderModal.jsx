@@ -103,8 +103,6 @@ export default function OrderModal({
         total_price: total,
       };
 
-      console.log("Order request URL:", url);
-      console.log("Order request data:", payload);
 
       const res = await fetch(url, {
         method: "POST",
@@ -112,8 +110,7 @@ export default function OrderModal({
         body: JSON.stringify(payload),
       });
 
-      console.log("Response status:", res.status);
-      console.log("Response body:", await res.clone().text());
+
 
       if (!res.ok) {
         let msg = `Order failed (${res.status})`;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Search, Menu, X, Footprints } from "lucide-react";
+import { Search, Menu, X } from "lucide-react";
 import "./Header.css";
 
 /* ---------- Config (edit here, not in the JSX) ---------- */
@@ -29,13 +29,18 @@ function isLinkActive(link, { pathname, hash }) {
 }
 
 /* ---------- Small reusable pieces ---------- */
-export function Logo({ light = false }) {
+export function Logo() {
   return (
-    <Link to="/" className="flex items-center" aria-label="Velaro home">
+    <Link
+      to="/"
+      className="flex shrink-0 items-center"
+      aria-label="Velaro home"
+    >
       <img
-        src="/images/logo/velaro.jpeg"
+        src="/images/logo/velaro.png"
         alt="Velaro"
-        className="h-15 w-auto object-contain"
+        // Logo size ekhane change korben: mobile h-14, desktop h-20
+        className="h-14 w-auto object-contain sm:h-20"
       />
     </Link>
   );
@@ -131,7 +136,8 @@ export default function Header() {
     <header className="sticky top-0 z-50 font-['Plus_Jakarta_Sans',sans-serif]">
       {/* Main bar */}
       <div className="border-b border-slate-200/70 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        {/* Header height: mobile 76px, desktop 84px (logo er sathe match kore) */}
+        <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-4 px-4 sm:h-[84px] sm:px-6 lg:px-8">
           <Logo />
 
           {/* Desktop nav */}

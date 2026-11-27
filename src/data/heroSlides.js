@@ -1,19 +1,19 @@
 // Media rule (Hero.jsx e):
-//   video: "..." thakle -> <video> dekhabe (image ta poster hishebe kaj kore)
-//   shudhu image: "..." thakle -> <img> dekhabe
-// Path: public/ folder er file "videos/x.mp4" ba "images/slider/x.webp" likhle hoy.
+//   bgVideo: "..."  -> poorto slide er background e video autoplay (poster = video load howar age)
+//   image: "..."    -> normal slide (dan e image)
+// Path: public/ folder er file "images/slider/x.mp4" likhle hoy.
 //       Backend theke ashle "/uploads/x.mp4" ba full "https://..." dile hoy.
 
 export const heroSlides = [
   {
     id: 1,
-    badge: "Performance Series", // <-- badge-er text
-    subtitle: "New Season • Up to 30% Off", // <-- chhoto light-blue text
-    title: ["STEP UP YOUR", "STYLE", "WITH velaro"], // <-- heading, 3 line
-    primaryCta: { label: "Shop Now", href: "/shop" }, // <-- white button
-    secondaryCta: { label: "Categories", href: "#categories" }, // <-- outline button
-    video: "images/slider/videoplayback.mp4", // <-- public/videos/videoplayback.mp4
-    poster: "images/slider/file_00000000c0a081faa3abd3db240d97d3.webp", // <-- video load howar age eta dekhabe
+    badge: "Performance Series",
+    subtitle: "New Season • Up to 30% Off",
+    title: ["STEP UP YOUR", "STYLE", "WITH velaro"],
+    primaryCta: { label: "Shop Now", href: "/shop" },
+    secondaryCta: { label: "Categories", href: "#categories" },
+    bgVideo: "images/slider/videoplayback.mp4", // <-- background video
+    poster: "images/slider/file_00000000c0a081faa3abd3db240d97d3.webp",
     imageAlt: "Blue velaro performance running shoe",
   },
   {
@@ -23,7 +23,8 @@ export const heroSlides = [
     title: ["BUILT FOR", "EVERYDAY", "CONFIDENCE"],
     primaryCta: { label: "Shop Now", href: "/shop" },
     secondaryCta: { label: "Categories", href: "#categories" },
-    image: "images/slider/file_0000000057f481fa89485f6c41b7ea03.png",
+    bgVideo: "images/slider/street-edition.mp4", // <-- tomar 2nd video er path dao
+    poster: "images/slider/file_0000000057f481fa89485f6c41b7ea03.png",
     imageAlt: "velaro street edition shoe",
   },
   {
@@ -33,7 +34,7 @@ export const heroSlides = [
     title: ["WALK BETTER.", "LIVE", "BOLDER."],
     primaryCta: { label: "Shop Now", href: "/shop" },
     secondaryCta: { label: "Categories", href: "#categories" },
-    image: "images/slider/file_0000000089dc81fab853b783098a8cc5.webp",
+    image: "images/slider/file_0000000089dc81fab853b783098a8cc5.webp", // normal slide
     imageAlt: "velaro athlete collection shoe",
   },
 ];

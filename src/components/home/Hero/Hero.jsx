@@ -19,8 +19,7 @@ const resolveSrc = (src) => {
   return src.startsWith("/") ? src : `/${src}`;
 };
 
-// Slide theke media ber kore: video hole { type: "video" }, na hole { type: "image" }
-// Backend field jei nam e ashuk (media, video, video_url, image, image_url) kaj korbe
+// Dan er media (bgVideo nai emon slide er jonno): video hole <video>, na hole <img>
 function getMedia(slide) {
   const raw =
     slide.video || slide.video_url || slide.media || slide.image || slide.image_url || "";
@@ -36,6 +35,13 @@ function getMedia(slide) {
 
 const MEDIA_CLASS =
   "block h-auto max-h-[280px] w-auto max-w-full rounded-lg object-contain shadow-2xl shadow-black/40 ring-1 ring-white/10 min-[480px]:max-h-[320px] sm:max-h-[400px] md:max-h-[500px]";
+
+// Shob slide e same font size. Bodlate chaile ekhane bodlao
+const SUBTITLE_CLASS = "text-[10px] min-[480px]:text-sm sm:text-base md:text-xl";
+const TITLE_CLASS =
+  "text-base min-[480px]:text-2xl sm:text-3xl lg:text-5xl xl:text-[64px]";
+const CTA_CLASS =
+  "px-3 py-1.5 text-[9px] min-[480px]:px-4 min-[480px]:py-2 min-[480px]:text-xs sm:px-5 sm:py-2.5";
 
 function HeroMedia({ slide }) {
   const { type, src, poster } = getMedia(slide);
@@ -69,6 +75,31 @@ function HeroMedia({ slide }) {
   );
 }
 
+// Background video: slide e bgVideo thakle poorto slide er pichone chole
+function HeroBackground({ slide }) {
+  const src = resolveSrc(slide.bgVideo);
+  if (!src) return null;
+
+  return (
+    <>
+      <video
+        key={src}
+        src={src}
+        poster={resolveSrc(slide.poster) || undefined}
+        className="absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        aria-hidden="true"
+      />
+      {/* Overlay: jate text porha jay. Beshi/kom dark korte bg-black/50 bodlao */}
+      <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
+    </>
+  );
+}
+
 export default function Hero({ slides = heroSlides }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -84,6 +115,12 @@ export default function Hero({ slides = heroSlides }) {
   }, [paused, next, count]);
 
   const slide = slides[index];
+  const hasBg = Boolean(slide.bgVideo); // true = background video slide
+
+  // bgVideo slide e single column (text beshi jayga pabe), normal slide e ager grid
+  const gridCols = hasBg
+    ? "grid-cols-1"
+    : "grid-cols-[1.35fr_1fr] md:grid-cols-[6fr_0.5fr_3.5fr]";
 
   const arrowBase =
     "flex items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent";
@@ -101,27 +138,39 @@ export default function Hero({ slides = heroSlides }) {
       {/* Gradient color change korte chaile index.css e --color-hero-from/via/to bodlao */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-hero-from via-hero-via to-hero-to">
         {/*
-          Slide layout (always side by side, never stacked):
-          mobile  : text 58% | image 42%
-          desktop : text 60% | 5% gap | image 35%
-          Size steps: <480px (small) -> 480px+ (medium) -> sm 640px -> md 768px -> lg 1024px -> xl 1280px
+          bgVideo thakle : poorto slide e video background, text bam e (single column)
+          bgVideo na thakle: text 58% | image 42% (ager moto)
         */}
         <div
           key={slide.id}
-          className="hero-slide grid grid-cols-[1.35fr_1fr] items-center gap-3 px-4 pb-14 pt-5 min-[480px]:gap-5 min-[480px]:px-7 min-[480px]:pb-14 min-[480px]:pt-6 sm:gap-6 sm:px-10 sm:pb-16 sm:pt-8 md:grid-cols-[6fr_0.5fr_3.5fr] md:gap-0 md:px-16 md:py-14 lg:px-20"
+          className={`hero-slide relative grid ${gridCols} items-center gap-3 px-4 pb-14 pt-5 min-[480px]:gap-5 min-[480px]:px-7 min-[480px]:pb-14 min-[480px]:pt-6 sm:gap-6 sm:px-10 sm:pb-16 sm:pt-8 md:gap-0 md:px-16 md:py-14 lg:px-20 ${
+            hasBg
+              ? "min-h-[260px] min-[480px]:min-h-[300px] sm:min-h-[360px] md:min-h-[440px] lg:min-h-[500px]"
+              : ""
+          }`}
         >
-          <div className="flex min-w-0 flex-col items-start">
+          <HeroBackground slide={slide} />
+
+          {/* Text column: relative z-10 must, nahole video er niche chole jabe */}
+          <div
+            className={`relative z-10 flex min-w-0 flex-col items-start ${
+              hasBg ? "max-w-[85%] sm:max-w-[75%] lg:max-w-[70%]" : ""
+            }`}
+          >
             <span className="inline-flex max-w-full items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[8px] font-bold uppercase tracking-wide text-accent-200 ring-1 ring-white/10 backdrop-blur min-[480px]:gap-1.5 min-[480px]:px-3 min-[480px]:py-1 min-[480px]:text-[11px] sm:gap-2 sm:px-4 sm:py-1.5 sm:text-xs">
               <Zap className="h-2.5 w-2.5 shrink-0 fill-star text-star min-[480px]:h-3 min-[480px]:w-3 sm:h-3.5 sm:w-3.5" />
               <span className="truncate">{slide.badge}</span>
             </span>
 
-            <p className="mt-2 text-[10px] font-semibold leading-snug text-accent-300 min-[480px]:mt-3 min-[480px]:text-sm sm:mt-4 sm:text-base md:text-xl">
+            <p
+              className={`mt-2 font-semibold leading-snug text-accent-300 min-[480px]:mt-3 sm:mt-4 ${SUBTITLE_CLASS}`}
+            >
               {slide.subtitle}
             </p>
 
-            {/* Heading size change korte: text-base min-[480px]:text-2xl sm:text-3xl lg:text-5xl xl:text-[64px] */}
-            <h1 className="mt-1.5 text-base font-extrabold uppercase leading-[1.1] tracking-tight text-white min-[480px]:mt-2 min-[480px]:text-2xl sm:mt-3 sm:text-3xl lg:text-5xl xl:text-[64px]">
+            <h1
+              className={`mt-1.5 font-extrabold uppercase leading-[1.1] tracking-tight text-white min-[480px]:mt-2 sm:mt-3 ${TITLE_CLASS}`}
+            >
               {slide.title.map((line) => (
                 <span key={line} className="block">
                   {line}
@@ -133,17 +182,19 @@ export default function Hero({ slides = heroSlides }) {
               {/* Shop Now -> /shop page */}
               <Link
                 to="/shop"
-                className="rounded-lg bg-white px-3 py-1.5 text-center text-[9px] font-extrabold uppercase tracking-wide text-ink transition duration-200 hover:bg-accent-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent min-[480px]:px-4 min-[480px]:py-2 min-[480px]:text-xs sm:px-5 sm:py-2.5"
+                className={`rounded-lg bg-white text-center font-extrabold uppercase tracking-wide text-ink transition duration-200 hover:bg-accent-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${CTA_CLASS}`}
               >
                 {slide.primaryCta.label}
               </Link>
             </div>
           </div>
 
-          {/* Media (always right): image hole <img>, video hole <video> */}
-          <div className="flex min-w-0 items-center justify-center md:col-start-3">
-            <HeroMedia slide={slide} />
-          </div>
+          {/* Dan er media: shudhu bg video na thakle dekhabe */}
+          {!hasBg && (
+            <div className="flex min-w-0 items-center justify-center md:col-start-3">
+              <HeroMedia slide={slide} />
+            </div>
+          )}
         </div>
 
         {count > 1 && (
@@ -153,7 +204,7 @@ export default function Hero({ slides = heroSlides }) {
               type="button"
               onClick={prev}
               aria-label="Previous slide"
-              className={`${arrowBase} absolute left-4 top-1/2 hidden h-9 w-9 -translate-y-1/2 md:flex`}
+              className={`${arrowBase} absolute left-4 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 md:flex`}
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -161,13 +212,13 @@ export default function Hero({ slides = heroSlides }) {
               type="button"
               onClick={next}
               aria-label="Next slide"
-              className={`${arrowBase} absolute right-4 top-1/2 hidden h-9 w-9 -translate-y-1/2 md:flex`}
+              className={`${arrowBase} absolute right-4 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 md:flex`}
             >
               <ChevronRight className="h-5 w-5" />
             </button>
 
             {/* Bottom controls: mobile = arrow + dots + arrow, desktop = dots only */}
-            <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-3 sm:bottom-4">
+            <div className="absolute inset-x-0 bottom-3 z-20 flex items-center justify-center gap-3 sm:bottom-4">
               <button
                 type="button"
                 onClick={prev}
