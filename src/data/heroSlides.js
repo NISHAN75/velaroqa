@@ -19,7 +19,7 @@ export const heroSlides = [
   {
     id: 2,
     badge: "Street Edition",
-    subtitle: "Fresh Drops • Free Delivery Over $2,000",
+    subtitle: "Fresh Drops • On all orders, always free",
     title: ["BUILT FOR", "EVERYDAY", "CONFIDENCE"],
     primaryCta: { label: "Shop Now", href: "/shop" },
     secondaryCta: { label: "Categories", href: "#categories" },
