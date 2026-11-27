@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { buildOrderLink } from "../../../utils/whatsapp";
@@ -53,7 +52,7 @@ export default function FeaturedProductCard({ product }) {
         to={productUrl}
         tabIndex={-1}
         aria-hidden="true"
-        className="relative block aspect-[4/3] overflow-hidden bg-[#F3F6FB]"
+        className="relative block aspect-[4/3] overflow-hidden bg-surface"
       >
         <img
           src={image}
@@ -64,14 +63,14 @@ export default function FeaturedProductCard({ product }) {
 
         {/* New Badge */}
         {isNew && (
-          <span className="absolute left-2 top-2 rounded-full bg-[#2563EB] px-2 py-0.5 text-[9px] font-bold text-white">
+          <span className="absolute left-2 top-2 rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold text-white">
             New
           </span>
         )}
 
         {/* Discount Badge */}
         {hasDiscount && (
-          <span className="absolute right-2 top-2 rounded-full bg-[#0F172A] px-2 py-0.5 text-[9px] font-bold text-[#38BDF8]">
+          <span className="absolute right-2 top-2 rounded-full bg-ink px-2 py-0.5 text-[9px] font-bold text-accent">
             -{discountPercent}%
           </span>
         )}
@@ -81,10 +80,10 @@ export default function FeaturedProductCard({ product }) {
       <div className="flex flex-1 flex-col p-3">
 
         {/* Product Name */}
-        <h3 className="mt-1 line-clamp-1 text-sm font-bold text-[#0F172A]">
+        <h3 className="mt-1 line-clamp-1 text-sm font-bold text-ink">
           <Link
             to={productUrl}
-            className="hover:text-[#1D4ED8]"
+            className="hover:text-primary-dark"
           >
             {name}
           </Link>
@@ -95,7 +94,7 @@ export default function FeaturedProductCard({ product }) {
 
           {/* Product Price */}
           <div className="flex items-baseline gap-2">
-            <span className="text-base font-extrabold text-[#0F172A]">
+            <span className="text-base font-extrabold text-ink">
               {formatPrice(hasDiscount ? discountPrice : price)}
             </span>
 
@@ -111,7 +110,7 @@ export default function FeaturedProductCard({ product }) {
             href={orderHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="featured-cta mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#F3F6FB] py-2 text-[11px] font-bold text-[#1D4ED8] transition duration-200 hover:bg-[#2563EB] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] focus-visible:ring-offset-2"
+            className="featured-cta mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-surface py-2 text-[11px] font-bold text-primary-dark transition duration-200 hover:bg-primary hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
           >
             Order Now
 

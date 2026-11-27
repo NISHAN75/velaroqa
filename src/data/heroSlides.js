@@ -1,12 +1,19 @@
+// Media rule (Hero.jsx e):
+//   video: "..." thakle -> <video> dekhabe (image ta poster hishebe kaj kore)
+//   shudhu image: "..." thakle -> <img> dekhabe
+// Path: public/ folder er file "videos/x.mp4" ba "images/slider/x.webp" likhle hoy.
+//       Backend theke ashle "/uploads/x.mp4" ba full "https://..." dile hoy.
+
 export const heroSlides = [
   {
     id: 1,
-    badge: "Performance Series",                 // <-- badge-er text
-    subtitle: "New Season • Up to 30% Off",      // <-- chhoto light-blue text
+    badge: "Performance Series", // <-- badge-er text
+    subtitle: "New Season • Up to 30% Off", // <-- chhoto light-blue text
     title: ["STEP UP YOUR", "STYLE", "WITH velaro"], // <-- heading, 3 line
-    primaryCta: { label: "Shop Now", href: "/shop" },        // <-- white button
+    primaryCta: { label: "Shop Now", href: "/shop" }, // <-- white button
     secondaryCta: { label: "Categories", href: "#categories" }, // <-- outline button
-    image: "images/slider/file_00000000c0a081faa3abd3db240d97d3.webp",              // <-- image path (public/images/)
+    video: "images/slider/videoplayback.mp4", // <-- public/videos/videoplayback.mp4
+    poster: "images/slider/file_00000000c0a081faa3abd3db240d97d3.webp", // <-- video load howar age eta dekhabe
     imageAlt: "Blue velaro performance running shoe",
   },
   {

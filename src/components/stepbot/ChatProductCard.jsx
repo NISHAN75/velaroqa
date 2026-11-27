@@ -18,9 +18,9 @@ export default function ChatProductCard({ product, onNavigate }) {
     <Link
       to={getProductUrl(product)}
       onClick={onNavigate}
-      className="group flex items-center gap-3 rounded-xl bg-white p-2 ring-1 ring-slate-200 transition duration-200 hover:ring-[#2563EB] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] active:scale-[0.99]"
+      className="group flex items-center gap-3 rounded-xl bg-white p-2 ring-1 ring-slate-200 transition duration-200 hover:ring-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary active:scale-[0.99]"
     >
-      <span className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#F3F6FB]">
+      <span className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface">
         <img
           src={product.image}
           alt={product.name}
@@ -28,18 +28,18 @@ export default function ChatProductCard({ product, onNavigate }) {
           className="h-full w-full object-contain"
         />
         {product.isNew && (
-          <span className="absolute left-0.5 top-0.5 rounded bg-[#1D4ED8] px-1 py-px text-[8px] font-bold uppercase text-white">
+          <span className="absolute left-0.5 top-0.5 rounded bg-primary-dark px-1 py-px text-[8px] font-bold uppercase text-white">
             New
           </span>
         )}
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-[13px] font-bold text-[#0F172A]">
+        <span className="block truncate text-[13px] font-bold text-ink">
           {product.name}
         </span>
         <span className="mt-0.5 flex flex-wrap items-center gap-x-1.5">
-          <span className="text-[13px] font-bold text-[#1D4ED8]">
+          <span className="text-[13px] font-bold text-primary-dark">
             {formatPrice(discounted ? product.discountPrice : product.price)}
           </span>
           {discounted && (
@@ -53,7 +53,7 @@ export default function ChatProductCard({ product, onNavigate }) {
             </>
           )}
         </span>
-        <span className="mt-1 flex items-center gap-1 text-[11px] font-bold text-[#1D4ED8]">
+        <span className="mt-1 flex items-center gap-1 text-[11px] font-bold text-primary-dark">
           View details
           <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
         </span>

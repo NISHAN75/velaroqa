@@ -22,7 +22,7 @@ export default function Testimonials({ items = testimonials }) {
         <div className="mb-7 text-center">
           <h2
             id="testimonials-title"
-            className="mt-1.5 text-2xl font-extrabold text-[#0F172A] sm:text-3xl"
+            className="mt-1.5 text-2xl font-extrabold text-ink sm:text-3xl"
           >
             What Our Walkers Say
           </h2>
@@ -43,7 +43,7 @@ export default function Testimonials({ items = testimonials }) {
                     key={i}
                     className={`h-3 w-3 ${
                       i < t.rating
-                        ? "fill-[#FBBF24] text-[#FBBF24]"
+                        ? "fill-star text-star"
                         : "fill-slate-200 text-slate-200"
                     }`}
                   />
@@ -59,12 +59,12 @@ export default function Testimonials({ items = testimonials }) {
               <figcaption className="mt-4 flex items-center gap-3">
                 <span
                   aria-hidden="true"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#E8EDF5] text-[10px] font-bold text-slate-600"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface text-[10px] font-bold text-slate-600"
                 >
                   {getInitials(t.name)}
                 </span>
                 <div>
-                  <p className="text-[11px] font-bold text-[#0F172A]">{t.name}</p>
+                  <p className="text-[11px] font-bold text-ink">{t.name}</p>
                   <p className="text-[10px] text-slate-500">
                     Verified Buyer • {t.city}
                   </p>

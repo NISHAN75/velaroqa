@@ -19,8 +19,8 @@
   border-radius: 1.25rem;
   background: #fff;
   box-shadow:
-    0 24px 60px -12px rgba(15, 23, 42, 0.35),
-    0 0 0 1px rgba(15, 23, 42, 0.06);
+  0 24px 60px -12px color-mix(in srgb, var(--color-ink) 35%, transparent),
+  0 0 0 1px color-mix(in srgb, var(--color-ink) 6%, transparent);
 
   transform-origin: bottom right;
   opacity: 0;
@@ -109,7 +109,8 @@
 .chatbot-scroll {
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: #c7d2fe transparent;
+  scrollbar-color: var(--color-tint-border) transparent;
+  background: var(--color-tint-border);
 }
 .chatbot-scroll::-webkit-scrollbar {
   width: 6px;

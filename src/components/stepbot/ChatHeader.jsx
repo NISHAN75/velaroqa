@@ -6,7 +6,7 @@ const headerBtn =
 
 export default function ChatHeader({ minimized, canClear, onClear, onToggleMinimize, onClose }) {
   return (
-    <div className="flex h-[4.5rem] shrink-0 items-center gap-3 bg-[#1D4ED8] px-4 text-white">
+    <div className="flex h-[4.5rem] shrink-0 items-center gap-3 bg-primary-dark px-4 text-white">
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
         <Bot className="h-5 w-5" strokeWidth={2.25} />
       </span>
@@ -17,12 +17,12 @@ export default function ChatHeader({ minimized, canClear, onClear, onToggleMinim
             {CHATBOT.name}
           </h2>
           <span className="flex shrink-0 items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#4ADE80]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-online" />
             {/* On very narrow phones only the green dot is shown */}
             <span className="max-[359px]:sr-only">Online</span>
           </span>
         </div>
-        <p className="mt-1.5 truncate text-xs text-blue-100">{CHATBOT.subtitle}</p>
+        <p className="mt-1.5 truncate text-xs text-primary-100">{CHATBOT.subtitle}</p>
       </div>
 
       <div className="-mr-1 flex shrink-0 items-center">

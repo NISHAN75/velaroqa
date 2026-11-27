@@ -4,7 +4,7 @@
 }
 .product-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 28px -12px rgba(15, 23, 42, 0.25);
+  box-shadow: 0 14px 28px -12px color-mix(in srgb, var(--color-ink) 25%, transparent);
 }
 
 .product-card .product-img {

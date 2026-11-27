@@ -31,8 +31,8 @@ export default function ChatMessage({ message, onProductClick }) {
         <div
           className={`whitespace-pre-line rounded-2xl px-4 py-2.5 text-sm leading-relaxed [overflow-wrap:anywhere] ${
             isUser
-              ? "rounded-br-md bg-[#1D4ED8] text-white"
-              : "rounded-bl-md bg-[#E8ECFF] text-[#0F172A]"
+              ? "rounded-br-md bg-primary-dark text-white"
+              : "rounded-bl-md bg-tint text-ink"
           }`}
         >
           {message.text}

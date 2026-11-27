@@ -13,7 +13,7 @@ export default function ClearChatDialog({ onCancel, onConfirm }) {
 
   return (
     <div
-      className="absolute inset-x-0 bottom-0 top-[4.5rem] z-10 flex items-center justify-center bg-[#0F172A]/45 p-5"
+      className="absolute inset-x-0 bottom-0 top-[4.5rem] z-10 flex items-center justify-center bg-ink/45 p-5"
       onClick={onCancel}
     >
       <div
@@ -27,7 +27,7 @@ export default function ClearChatDialog({ onCancel, onConfirm }) {
         <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-red-50 text-red-600">
           <Trash2 className="h-5 w-5" />
         </span>
-        <h3 id="velaro-clear-title" className="mt-3 text-[15px] font-extrabold text-[#0F172A]">
+        <h3 id="velaro-clear-title" className="mt-3 text-[15px] font-extrabold text-ink">
           {CLEAR_CHAT.title}
         </h3>
         <p id="velaro-clear-desc" className="mt-1.5 text-[13px] leading-relaxed text-slate-500">
@@ -39,7 +39,7 @@ export default function ClearChatDialog({ onCancel, onConfirm }) {
             ref={cancelRef}
             type="button"
             onClick={onCancel}
-            className="flex-1 rounded-full border border-slate-200 px-4 py-2.5 text-sm font-semibold text-[#0F172A] transition-colors duration-200 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]"
+            className="flex-1 rounded-full border border-slate-200 px-4 py-2.5 text-sm font-semibold text-ink transition-colors duration-200 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             {CLEAR_CHAT.cancel}
           </button>

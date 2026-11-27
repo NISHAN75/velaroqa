@@ -14,7 +14,7 @@ export default function Categories({ items = categories }) {
             key={cat.id}
             href={cat.href}
             aria-label={`Shop ${cat.name}`}
-            className="category-card group relative block aspect-[5/4] overflow-hidden rounded-2xl bg-[#0B2A8A] shadow-lg shadow-blue-900/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] focus-visible:ring-offset-2"
+            className="category-card group relative block aspect-[5/4] overflow-hidden rounded-2xl bg-primary-darkest shadow-lg shadow-primary-darkest/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
           >
             {/* Background image: full width + full height */}
             <img

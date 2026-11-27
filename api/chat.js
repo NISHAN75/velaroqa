@@ -17,7 +17,7 @@ const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 // Products come from the backend API (they are no longer hard-coded in src/data/products.js).
 // NOTE: we do NOT import src/data/products.js here: it uses import.meta.env (Vite-only),
 // which does not exist when this function runs as plain Node on Vercel.
-const BACKEND_URL = (process.env.BACKEND_API_URL || process.env.VITE_BACKEND_API_URL || "https://server.velaroqa.com").replace(/\/$/, "");
+const BACKEND_URL = (process.env.BACKEND_API_URL || process.env.BACKEND_API_URL || "https://server.velaroqa.com").replace(/\/$/, "");
 const CATALOG_TTL_MS = 5 * 60_000; // refresh the product list every 5 minutes
 const CATALOG_TIMEOUT_MS = 5_000;
 const NEW_DAYS = 7;

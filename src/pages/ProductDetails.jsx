@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useProducts } from "../context/ProductsContext";
 import { buildOrderLink } from "../utils/whatsapp";
 import { siteConfig } from "../data/siteConfig";
 import NotFound from "./NotFound";
 import RelatedProducts from "../components/common/RelatedProducts/RelatedProducts";
-
+import OrderModal from "../components/common/OrderModal/OrderModal";
 
 const DEFAULT_SIZES = [
   { size: 39 },
@@ -25,14 +25,16 @@ const DEFAULT_FEATURES = [
   "Non-marking rubber outsole with classic pivot circle pattern",
 ];
 
-// 199 -> "QR 199.00", 119.25 -> "QR 119.25"
-const formatPrice = (value) =>
-  typeof value === "number"
-    ? `QR ${value.toLocaleString("en-US", {
+// 199 -> "QR 199.00", "150.00" -> "QR 150.00"
+const formatPrice = (value) => {
+  const n = Number(value);
+  return Number.isFinite(n)
+    ? `QR ${n.toLocaleString("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       })}`
     : value;
+};
 
 function ChevronRight() {
   return (
@@ -76,14 +78,6 @@ function BagIcon() {
   );
 }
 
-function HeartIcon({ filled }) {
-  return (
-    <svg className="h-4 w-4" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z" />
-    </svg>
-  );
-}
-
 export default function ProductDetails() {
   const { id } = useParams();
   const { getProductById, loading } = useProducts();
@@ -91,7 +85,15 @@ export default function ProductDetails() {
 
   const [selectedSize, setSelectedSize] = useState(null); // null = first size is used
   const [quantity, setQuantity] = useState(1);
-  const [wishlisted, setWishlisted] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
+  const [orderOpen, setOrderOpen] = useState(false);
+
+  // product change hole (ba notun page e gele) first image e fire jabe
+  useEffect(() => {
+    setActiveImage(0);
+    setSelectedSize(null);
+    setQuantity(1);
+  }, [id]);
 
   // Direct visit to /product/10: wait for the API before deciding "not found"
   if (loading) {
@@ -111,20 +113,38 @@ export default function ProductDetails() {
     );
   }
 
+  // sizes: [39, 41, 43] ba [{ size: 39, disabled: true }] dutoi cholbe
   const sizes = product.sizes?.length
     ? product.sizes.map((s) => (typeof s === "object" ? s : { size: s }))
     : DEFAULT_SIZES;
-  // nothing picked yet -> first size of this product is selected
   const activeSize = selectedSize ?? sizes[0]?.size;
+
   const features = product.features?.length ? product.features : DEFAULT_FEATURES;
-  const image = product.image || product.images?.[0];
   const category = product.category || "Sneakers";
   const phone = product.phone || siteConfig.phone;
+
+  // ---- Images ----
+  // normalizeProduct already turned every path into a full URL
+  const gallery = (
+    product.images?.length ? product.images : [product.image]
+  ).filter(Boolean);
+  const image = gallery[activeImage] || gallery[0];
+
+  // ---- Price (API te string ashe: "150.00") ----
+  const price = Number(product.price);
+  const discountRaw = product.discountPrice ?? product.discount;
+  const discountPrice =
+    discountRaw === null || discountRaw === undefined || discountRaw === ""
+      ? NaN
+      : Number(discountRaw);
   const hasDiscount =
-    typeof product.discountPrice === "number" && product.discountPrice < product.price;
+    Number.isFinite(price) &&
+    Number.isFinite(discountPrice) &&
+    discountPrice > 0 &&
+    discountPrice < price;
   // Always a whole number: 40.2 -> 40
   const discountPercent = hasDiscount
-    ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
+    ? Math.round(((price - discountPrice) / price) * 100)
     : 0;
 
   // "Order Now" and "Message Now" both open WhatsApp with product, size and quantity already typed
@@ -134,55 +154,87 @@ export default function ProductDetails() {
   );
 
   return (
-    <section className="font-['Plus_Jakarta_Sans',sans-serif] bg-[#F8FAFF]">
+    <section className="font-['Plus_Jakarta_Sans',sans-serif] bg-surface-soft">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-5 flex items-center gap-1.5 text-xs text-slate-500" aria-label="Breadcrumb">
-          <Link to="/" className="flex items-center gap-1 hover:text-[#2563EB]">
+          <Link to="/" className="flex items-center gap-1 hover:text-primary">
             <HomeIcon />
             Home
           </Link>
           <ChevronRight />
-          <Link to="/" className="hover:text-[#2563EB]">
+          <Link to="/" className="hover:text-primary">
             {category}
           </Link>
           <ChevronRight />
-          <span className="font-semibold text-[#0F172A]">{product.name}</span>
+          <span className="font-semibold text-ink">{product.name}</span>
         </nav>
 
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
-        {/* Image */}
-        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-[#E2E8F0] bg-white shadow-sm lg:aspect-auto lg:h-full lg:min-h-[360px]">
-          {image ? (
-            <img
-              src={image}
-              alt={product.name}
-              className="absolute inset-0 h-full w-full object-contain"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center text-sm text-slate-400">
-              No image available
-            </div>
-          )}
+          {/* Gallery: mobile e main image upore + thumbnail niche, desktop e thumbnail left e */}
+          <div className="flex flex-col-reverse gap-3 lg:flex-row">
+            {/* Thumbnails */}
+            {gallery.length > 1 && (
+              <div className="lg:relative lg:w-20 lg:shrink-0">
+                <div className="flex gap-2 overflow-x-auto pb-1 lg:absolute lg:inset-0 lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto lg:pb-0">
+                  {gallery.map((src, i) => (
+                    <button
+                      key={src + i}
+                      type="button"
+                      onClick={() => setActiveImage(i)}
+                      aria-label={`View image ${i + 1}`}
+                      aria-current={activeImage === i}
+                      className={`h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 bg-white transition sm:h-20 sm:w-20 lg:h-20 lg:w-full ${
+                        activeImage === i
+                          ? "border-primary-dark shadow-md shadow-primary-100"
+                          : "border-line hover:border-primary-300"
+                      }`}
+                    >
+                      <img
+                        src={src}
+                        alt={`${product.name} ${i + 1}`}
+                        className="h-full w-full object-contain p-1"
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-          {/* Discount badge */}
-          {hasDiscount && (
-            <span className="absolute right-3 top-3 rounded-full bg-[#0F172A] px-3 py-1 text-xs font-bold text-[#38BDF8]">
-              -{discountPercent}%
-            </span>
-          )}
-        </div>
+            {/* Main image */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-line bg-white shadow-sm lg:aspect-auto lg:min-h-[420px] lg:flex-1">
+              {image ? (
+                <img
+                  key={image}
+                  src={image}
+                  alt={product.name}
+                  className="absolute inset-0 h-full w-full object-contain"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-sm text-slate-400">
+                  No image available
+                </div>
+              )}
+
+              {/* Discount badge */}
+              {hasDiscount && (
+                <span className="absolute right-3 top-3 rounded-full bg-ink px-3 py-1 text-xs font-bold text-accent">
+                  -{discountPercent}%
+                </span>
+              )}
+            </div>
+          </div>
 
           {/* Info */}
           <div className="flex flex-col">
             {(product.id || product.sku) && (
-                <p className="mt-5 text-[11px] text-slate-400">
-                  Product ID: {product.id}
-                  {product.sku ? ` · SKU: ${product.sku}` : ""}
-                </p>
-              )}
+              <p className="text-[11px] text-slate-400 lg:mt-1">
+                Product ID: {product.id}
+                {product.sku ? ` · SKU: ${product.sku}` : ""}
+              </p>
+            )}
 
-            <h1 className="mt-3 text-2xl font-extrabold text-[#0F172A] sm:text-3xl">
+            <h1 className="mt-3 text-2xl font-extrabold text-ink sm:text-3xl">
               {product.name}
             </h1>
             <p className="mt-1 text-sm text-slate-500">
@@ -190,8 +242,8 @@ export default function ProductDetails() {
             </p>
 
             <div className="mt-4 flex items-baseline gap-3">
-              <p className="text-3xl font-extrabold text-[#1D4ED8]">
-                {formatPrice(hasDiscount ? product.discountPrice : product.price)}
+              <p className="text-3xl font-extrabold text-primary-dark">
+                {formatPrice(hasDiscount ? discountPrice : product.price)}
               </p>
               {hasDiscount && (
                 <span className="text-base text-slate-400 line-through">
@@ -202,7 +254,7 @@ export default function ProductDetails() {
 
             {/* Size */}
             <div className="mt-5">
-              <p className="text-xs font-bold text-[#0F172A]">Size:</p>
+              <p className="text-xs font-bold text-ink">Size:</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {sizes.map(({ size, disabled }) => {
                   const active = activeSize === size;
@@ -214,10 +266,10 @@ export default function ProductDetails() {
                       onClick={() => setSelectedSize(size)}
                       className={`h-9 min-w-[40px] rounded-lg border px-3 text-xs font-bold transition ${
                         active
-                          ? "border-[#1D4ED8] bg-[#1D4ED8] text-white shadow-md shadow-blue-200"
+                          ? "border-primary-dark bg-primary-dark text-white shadow-md shadow-primary-200"
                           : disabled
-                          ? "cursor-not-allowed border-[#E2E8F0] bg-[#F1F5F9] text-slate-300"
-                          : "border-[#DBEAFE] bg-white text-[#0F172A] hover:border-[#2563EB] hover:text-[#2563EB]"
+                          ? "cursor-not-allowed border-line bg-surface text-slate-300"
+                          : "border-primary-100 bg-white text-ink hover:border-primary hover:text-primary"
                       }`}
                     >
                       {size}
@@ -229,23 +281,23 @@ export default function ProductDetails() {
 
             {/* Quantity */}
             <div className="mt-5">
-              <p className="text-xs font-bold text-[#0F172A]">Quantity:</p>
-              <div className="mt-2 inline-flex items-center rounded-full border border-[#CBD5E1] bg-white">
+              <p className="text-xs font-bold text-ink">Quantity:</p>
+              <div className="mt-2 inline-flex items-center rounded-full border border-line-strong bg-white">
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="flex h-9 w-9 items-center justify-center rounded-full text-lg text-slate-600 hover:text-[#2563EB]"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-lg text-slate-600 hover:text-primary"
                   aria-label="Decrease quantity"
                 >
                   −
                 </button>
-                <span className="w-8 text-center text-sm font-bold text-[#0F172A]">
+                <span className="w-8 text-center text-sm font-bold text-ink">
                   {quantity}
                 </span>
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full text-lg text-slate-600 hover:text-[#2563EB]"
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-lg text-slate-600 hover:text-primary"
                   aria-label="Increase quantity"
                 >
                   +
@@ -253,22 +305,21 @@ export default function ProductDetails() {
               </div>
             </div>
 
-            {/* Order Now (full width, opens the same WhatsApp message as "Message Now") */}
-            <a
-              href={messageUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#1D4ED8] px-5 text-sm font-bold text-white shadow-md shadow-blue-200 transition hover:bg-[#2563EB] active:scale-[0.99] sm:text-base"
+            {/* Order Now (full width, opens the checkout modal) */}
+            <button
+              type="button"
+              onClick={() => setOrderOpen(true)}
+              className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary-dark px-5 text-sm font-bold text-white shadow-md shadow-primary-200 transition hover:bg-primary active:scale-[0.99] sm:text-base"
             >
               <BagIcon />
               Order Now
-            </a>
+            </button>
 
             {/* Actions */}
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <a
                 href={`tel:${phone}`}
-                className="inline-flex h-11 min-w-[140px] flex-1 items-center justify-center gap-2 rounded-full border border-[#1D4ED8] bg-white px-5 text-xs sm:text-sm md:text-base font-bold text-[#1D4ED8] transition hover:bg-[#EFF6FF]"
+                className="inline-flex h-11 min-w-[140px] flex-1 items-center justify-center gap-2 rounded-full border border-primary-dark bg-white px-5 text-xs sm:text-sm md:text-base font-bold text-primary-dark transition hover:bg-primary-50"
               >
                 <PhoneIcon />
                 Call Now
@@ -277,21 +328,21 @@ export default function ProductDetails() {
                 href={messageUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-11 min-w-[140px] flex-1 items-center justify-center gap-2 rounded-full bg-[#1D4ED8] px-5 text-xs sm:text-sm md:text-base font-bold text-white shadow-md shadow-blue-200 transition hover:bg-[#2563EB]"
+                className="inline-flex h-11 min-w-[140px] flex-1 items-center justify-center gap-2 rounded-full bg-primary-dark px-5 text-xs sm:text-sm md:text-base font-bold text-white shadow-md shadow-primary-200 transition hover:bg-primary"
               >
                 <WhatsAppIcon />
                 Message Now
               </a>
             </div>
 
-            <hr className="my-6 border-[#E2E8F0]" />
+            <hr className="my-6 border-line" />
 
             {/* Details */}
             <div>
-              <h2 className="text-sm font-extrabold text-[#0F172A]">
+              <h2 className="text-sm font-extrabold text-ink">
                 Product Details &amp; Features
               </h2>
-              <p className="mt-3 text-xs leading-relaxed text-[#1D4ED8]/80">
+              <p className="mt-3 text-xs leading-relaxed text-primary-dark/80">
                 {product.description ||
                   "The Nike Air Force 1 '07 puts a fresh spin on the iconic basketball legend. Featuring crisp leather overlays, bold royal blue accents, and an encapsulated Nike Air unit, it delivers unmatched cushioning and timeless street style built for all-day comfort."}
               </p>
@@ -299,20 +350,27 @@ export default function ProductDetails() {
               <ul className="mt-4 space-y-2">
                 {features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2 text-xs text-slate-600">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#2563EB]" />
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                     {feature}
                   </li>
                 ))}
               </ul>
-
-              
             </div>
           </div>
         </div>
       </div>
 
-      <RelatedProducts product={product} />
+      <OrderModal
+        open={orderOpen}
+        onClose={() => setOrderOpen(false)}
+        product={product}
+        unitPrice={hasDiscount ? discountPrice : price}
+        sizes={sizes}
+        initialSize={activeSize}
+        initialQuantity={quantity}
+      />
 
+      <RelatedProducts product={product} />
     </section>
   );
 }

@@ -38,7 +38,7 @@ const SOCIALS = [
 function LinkColumn({ title, links }) {
   return (
     <div>
-      <h3 className="mb-4 text-[11px] font-bold tracking-[0.1em] text-[#38BDF8]">{title}</h3>
+      <h3 className="mb-4 text-[11px] font-bold tracking-[0.1em] text-accent">{title}</h3>
       <ul className="space-y-2.5">
         {links.map((l) => (
           <li key={l.label}>
@@ -66,7 +66,7 @@ export default function Footer() {
   };
 
   return (
-    <footer id="contact" className="bg-[#0F172A] font-['Plus_Jakarta_Sans',sans-serif] text-slate-300">
+    <footer id="contact" className="bg-ink font-['Plus_Jakarta_Sans',sans-serif] text-slate-300">
       <div className="mx-auto max-w-7xl px-4 pb-6 pt-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.2fr] lg:gap-12">
           {/* Brand + newsletter */}
@@ -80,7 +80,7 @@ export default function Footer() {
             <h3 className="mb-1 mt-6 text-[11px] font-bold tracking-[0.1em] text-white">
               SUBSCRIBE TO OUR NEWSLETTER
             </h3>
-            <p className="mb-3 text-[11px] text-[#38BDF8]">
+            <p className="mb-3 text-[11px] text-accent">
               Get insider drops &amp; exclusive offers straight to your inbox.
             </p>
             <form onSubmit={handleSubmit} className="flex max-w-sm gap-2">
@@ -91,11 +91,11 @@ export default function Footer() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
                 aria-label="Email address"
-                className="min-w-0 flex-1 rounded-md border border-white/10 bg-white/5 px-3 py-2.5 text-xs text-white outline-none placeholder:text-slate-500 focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]"
+                className="min-w-0 flex-1 rounded-md border border-white/10 bg-white/5 px-3 py-2.5 text-xs text-white outline-none placeholder:text-slate-500 focus:border-primary focus:ring-1 focus:ring-primary"
               />
               <button
                 type="submit"
-                className="rounded-md bg-[#1D4ED8] px-4 py-2.5 text-xs font-bold text-white transition-colors duration-200 hover:bg-[#2563EB] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8]"
+                className="rounded-md bg-primary-dark px-4 py-2.5 text-xs font-bold text-white transition-colors duration-200 hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 Subscribe
               </button>
@@ -107,7 +107,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/5 text-slate-300 transition-colors duration-200 hover:border-[#2563EB] hover:bg-[#1D4ED8] hover:text-white"
+                  className="flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/5 text-slate-300 transition-colors duration-200 hover:border-primary hover:bg-primary-dark hover:text-white"
                 >
                   <Icon className="h-3.5 w-3.5" />
                 </a>
@@ -120,7 +120,7 @@ export default function Footer() {
 
           {/* Contact (clickable: tel, mailto, Google Maps) */}
           <div>
-            <h3 className="mb-4 text-[11px] font-bold tracking-[0.1em] text-[#38BDF8]">CONTACT</h3>
+            <h3 className="mb-4 text-[11px] font-bold tracking-[0.1em] text-accent">CONTACT</h3>
             <ul className="space-y-3">
               {CONTACT.map(({ icon: Icon, text, href }) => (
                 <li key={text}>
@@ -131,7 +131,7 @@ export default function Footer() {
                       : {})}
                     className="flex items-start gap-2.5 text-xs text-slate-300 transition-colors duration-200 hover:text-white"
                   >
-                    <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#38BDF8]" />
+                    <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" />
                     {text}
                   </a>
                 </li>

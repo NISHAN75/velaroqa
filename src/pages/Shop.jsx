@@ -54,24 +54,24 @@ function ProductListItem({ product }) {
     <article className="flex gap-3 overflow-hidden rounded-xl bg-white p-3 shadow-sm ring-1 ring-slate-200/60 sm:gap-4">
       <Link
         to={productUrl}
-        className="relative block h-28 w-32 shrink-0 overflow-hidden rounded-lg bg-[#F3F6FB] sm:h-32 sm:w-44"
+        className="relative block h-28 w-32 shrink-0 overflow-hidden rounded-lg bg-surface sm:h-32 sm:w-44"
       >
         <img src={image} alt={name} loading="lazy" className="h-full w-full object-cover" />
         {isNew && (
-          <span className="absolute left-2 top-2 rounded-full bg-[#2563EB] px-2 py-0.5 text-[9px] font-bold text-white">
+          <span className="absolute left-2 top-2 rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold text-white">
             New
           </span>
         )}
         {discounted && (
-          <span className="absolute right-2 top-2 rounded-full bg-[#0F172A] px-2 py-0.5 text-[9px] font-bold text-[#38BDF8]">
+          <span className="absolute right-2 top-2 rounded-full bg-ink px-2 py-0.5 text-[9px] font-bold text-accent">
             -{percent}%
           </span>
         )}
       </Link>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <h3 className="line-clamp-1 text-sm font-bold text-[#0F172A]">
-          <Link to={productUrl} className="hover:text-[#1D4ED8]">
+        <h3 className="line-clamp-1 text-sm font-bold text-ink">
+          <Link to={productUrl} className="hover:text-primary-dark">
             {name}
           </Link>
         </h3>
@@ -79,7 +79,7 @@ function ProductListItem({ product }) {
 
         <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-2">
           <div className="flex items-baseline gap-2">
-            <span className="text-base font-extrabold text-[#0F172A]">
+            <span className="text-base font-extrabold text-ink">
               {formatPrice(finalPrice(product))}
             </span>
             {discounted && (
@@ -93,7 +93,7 @@ function ProductListItem({ product }) {
             )}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-1.5 rounded-lg bg-[#F3F6FB] px-4 py-2 text-[11px] font-bold text-[#1D4ED8] transition duration-200 hover:bg-[#2563EB] hover:text-white"
+            className="group inline-flex items-center gap-1.5 rounded-lg bg-surface px-4 py-2 text-[11px] font-bold text-primary-dark transition duration-200 hover:bg-primary hover:text-white"
           >
             Order Now
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -182,12 +182,12 @@ export default function Shop() {
   };
 
   const inputClass =
-    "h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs text-[#0F172A] outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/20";
+    "h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs text-ink outline-none focus:border-primary focus:ring-2 focus:ring-primary/20";
 
   return (
     <section className="font-['Plus_Jakarta_Sans',sans-serif]">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div className="rounded-2xl bg-[#F3F6FB] p-4 sm:p-6">
+        <div className="rounded-2xl bg-surface p-4 sm:p-6">
           {/* Top bar: search, filters, sort, view */}
           <div className="flex flex-wrap items-center gap-3">
             <label className="relative w-full sm:w-64">
@@ -205,12 +205,12 @@ export default function Shop() {
               type="button"
               onClick={() => setShowFilters((s) => !s)}
               aria-expanded={showFilters}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg px-2 text-xs font-semibold text-[#1D4ED8] hover:text-[#2563EB]"
+              className="inline-flex h-9 items-center gap-1.5 rounded-lg px-2 text-xs font-semibold text-primary-dark hover:text-primary"
             >
               <SlidersHorizontal className="h-3.5 w-3.5" />
               Filters
               {activeFilterCount > 0 && (
-                <span className="rounded-full bg-[#2563EB] px-1.5 text-[9px] font-bold text-white">
+                <span className="rounded-full bg-primary px-1.5 text-[9px] font-bold text-white">
                   {activeFilterCount}
                 </span>
               )}
@@ -245,8 +245,8 @@ export default function Shop() {
                     aria-pressed={view === id}
                     className={`flex h-8 w-8 items-center justify-center rounded-md transition ${
                       view === id
-                        ? "bg-white text-[#1D4ED8] shadow-sm"
-                        : "text-slate-400 hover:text-[#2563EB]"
+                        ? "bg-white text-primary-dark shadow-sm"
+                        : "text-slate-400 hover:text-primary"
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -260,7 +260,7 @@ export default function Shop() {
           {showFilters && (
             <div className="mt-3 flex flex-wrap items-end gap-4 rounded-xl bg-white p-4 ring-1 ring-slate-200/60">
               <div>
-                <p className="mb-1 text-[11px] font-bold text-[#0F172A]">Price (QR )</p>
+                <p className="mb-1 text-[11px] font-bold text-ink">Price (QR )</p>
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
@@ -287,7 +287,7 @@ export default function Shop() {
                   type="checkbox"
                   checked={onlyNew}
                   onChange={(e) => setOnlyNew(e.target.checked)}
-                  className="h-4 w-4 accent-[#2563EB]"
+                  className="h-4 w-4 accent-primary"
                 />
                 New arrivals
               </label>
@@ -297,7 +297,7 @@ export default function Shop() {
                   type="checkbox"
                   checked={onlySale}
                   onChange={(e) => setOnlySale(e.target.checked)}
-                  className="h-4 w-4 accent-[#2563EB]"
+                  className="h-4 w-4 accent-primary"
                 />
                 On sale
               </label>
@@ -306,7 +306,7 @@ export default function Shop() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-[#2563EB]"
+                  className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-primary"
                 >
                   <X className="h-3.5 w-3.5" />
                   Clear filters
@@ -323,7 +323,7 @@ export default function Shop() {
                 <button
                   type="button"
                   onClick={reload}
-                  className="mt-3 rounded-lg bg-[#2563EB] px-5 py-2 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
+                  className="mt-3 rounded-lg bg-primary px-5 py-2 text-xs font-bold text-white transition hover:bg-primary-dark"
                 >
                   Try again
                 </button>
@@ -387,7 +387,7 @@ export default function Shop() {
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
                     aria-label="Previous page"
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-slate-500 hover:text-[#2563EB] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-slate-500 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
@@ -405,8 +405,8 @@ export default function Shop() {
                         aria-current={p === currentPage ? "page" : undefined}
                         className={`flex h-7 min-w-[28px] items-center justify-center rounded-md px-2 text-xs font-bold transition ${
                           p === currentPage
-                            ? "bg-[#2563EB] text-white shadow-sm"
-                            : "text-slate-600 hover:bg-white hover:text-[#2563EB]"
+                            ? "bg-primary text-white shadow-sm"
+                            : "text-slate-600 hover:bg-white hover:text-primary"
                         }`}
                       >
                         {p}
@@ -419,7 +419,7 @@ export default function Shop() {
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
                     aria-label="Next page"
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-slate-500 hover:text-[#2563EB] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-slate-500 hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>

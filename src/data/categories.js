@@ -7,7 +7,7 @@ export const categories = [
     tagline: "Move Fresh",
     href: "/shop?category=sneakers",
     image: "/images/categories/category-01.png",
-    gradient: "from-[#2F6BFF] via-[#1D4ED8] to-[#0B2A8A]",
+    gradient: "from-primary-light via-primary-dark to-primary-darkest",
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ export const categories = [
     tagline: "Go Further",
     href: "/shop?category=running",
     image: "/images/categories/category-02.png",
-    gradient: "from-[#1D4ED8] via-[#1A44C2] to-[#0B2A8A]",
+    gradient: "from-primary-dark via-primary-mid to-primary-darkest",
   },
   {
     id: 3,
@@ -23,7 +23,7 @@ export const categories = [
     tagline: "Dress Sharp",
     href: "/shop?category=formal",
     image: "/images/categories/category-03.png",
-    gradient: "from-[#1E40AF] via-[#14308F] to-[#0B1E5B]",
+    gradient: "from-primary-deeper via-primary-mid2 to-primary-night",
   },
   {
     id: 4,
@@ -31,6 +31,6 @@ export const categories = [
     tagline: "Step Easy",
     href: "/shop?category=loafer",
     image: "/images/categories/category-04.png",
-    gradient: "from-[#2563EB] via-[#1D4ED8] to-[#0B2A8A]",
+    gradient: "from-primary via-primary-dark to-primary-darkest",
   },
 ];

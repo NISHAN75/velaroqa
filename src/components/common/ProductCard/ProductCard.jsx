@@ -1,9 +1,14 @@
+import { useState } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { buildOrderLink } from "../../../utils/whatsapp";
+import OrderModal from "../OrderModal/OrderModal"; // path tomar folder onujayi thik koro
 import "./ProductCard.css";
 
 const CURRENCY = "QR";
+
+// size nai hole ei list dekhabe (ProductDetails er moto)
+const DEFAULT_SIZES = [39, 40, 41, 42, 43, 44];
 
 // 199 -> "QR 199.00", 119.25 -> "QR 119.25", 1500 -> "QR 1,500.00"
 const formatPrice = (n) =>
@@ -15,12 +20,15 @@ const formatPrice = (n) =>
 /**
  * One card for every product grid.
  *
- * variant="default"  -> "Order Now" button (opens WhatsApp with product details)
+ * variant="default"  -> "Order Now" button (opens the order modal)
  * variant="featured" -> "BRAND · CATEGORY" label + "View Details" button
  */
 export default function ProductCard({ product, variant = "default" }) {
   const { id, name, price, discountPrice, image, isNew } = product;
+
+  
   const isFeatured = variant === "featured";
+  const [orderOpen, setOrderOpen] = useState(false);
 
   // brand / category are optional in the data: fall back so nothing breaks
   const brand = product.brand || name.split(" ")[0];
@@ -35,8 +43,12 @@ export default function ProductCard({ product, variant = "default" }) {
 
   const productUrl = `/product/${id}`;
 
+  const sizes = (product.sizes?.length ? product.sizes : DEFAULT_SIZES).map((s) =>
+    typeof s === "object" ? s : { size: s }
+  );
+
   const ctaClass =
-    "group mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#F3F6FB] py-2 text-[11px] font-bold text-[#1D4ED8] transition duration-200 hover:bg-[#2563EB] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] focus-visible:ring-offset-2";
+    "group mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-surface py-2 text-[11px] font-bold text-primary-dark transition duration-200 hover:bg-primary hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2";
   const arrow = (
     <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
   );
@@ -59,12 +71,12 @@ export default function ProductCard({ product, variant = "default" }) {
 
         {/* Badges */}
         {isNew && (
-          <span className="absolute left-2 top-2 rounded-full bg-[#2563EB] px-2 py-0.5 text-[9px] font-bold text-white">
+          <span className="absolute left-2 top-2 rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold text-white">
             New
           </span>
         )}
         {hasDiscount && (
-          <span className="absolute right-2 top-2 rounded-full bg-[#0F172A] px-2 py-0.5 text-[9px] font-bold text-[#38BDF8]">
+          <span className="absolute right-2 top-2 rounded-full bg-ink px-2 py-0.5 text-[9px] font-bold text-accent">
             -{discountPercent}%
           </span>
         )}
@@ -73,14 +85,14 @@ export default function ProductCard({ product, variant = "default" }) {
       {/* Info */}
       <div className="flex flex-1 flex-col p-3">
         {isFeatured && (
-          <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#2563EB]">
+          <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-primary">
             {brand} · {category}
           </p>
         )}
 
         {/* Name */}
-        <h3 className="mt-1 line-clamp-1 text-sm font-bold text-[#0F172A]">
-          <Link to={productUrl} className="hover:text-[#1D4ED8]">
+        <h3 className="mt-1 line-clamp-1 text-sm font-bold text-ink">
+          <Link to={productUrl} className="hover:text-primary-dark">
             {name}
           </Link>
         </h3>
@@ -88,7 +100,7 @@ export default function ProductCard({ product, variant = "default" }) {
         {/* Price + button stay at the bottom so all cards line up */}
         <div className="mt-auto pt-3">
           <div className="flex items-baseline gap-2">
-            <span className="text-base font-extrabold text-[#0F172A]">
+            <span className="text-base font-extrabold text-ink">
               {formatPrice(hasDiscount ? discountPrice : price)}
             </span>
             {hasDiscount && (
@@ -102,21 +114,28 @@ export default function ProductCard({ product, variant = "default" }) {
               {arrow}
             </Link>
           ) : (
-            <a
-              href={buildOrderLink(
-                { ...product, category },
-                { url: `${window.location.origin}${productUrl}` }
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={ctaClass}
-            >
+            <button type="button" onClick={() => setOrderOpen(true)} className={ctaClass}>
               Order Now
               {arrow}
-            </a>
+            </button>
           )}
         </div>
       </div>
+
+      {/* Portal: card er hover transform/overflow-hidden modal ke atkabe na */}
+      {!isFeatured &&
+        createPortal(
+          <OrderModal
+            open={orderOpen}
+            onClose={() => setOrderOpen(false)}
+            product={product}
+            unitPrice={hasDiscount ? discountPrice : price}
+            sizes={sizes}
+            initialSize={sizes[0]?.size}
+            initialQuantity={1}
+          />,
+          document.body
+        )}
     </article>
   );
 }

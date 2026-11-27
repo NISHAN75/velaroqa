@@ -4,29 +4,51 @@
 // Backend field        ->  what the site uses
 //   price ("2100.00")  ->  price (number)
 //   discount ("8.00")  ->  discountPrice (price minus that % — only if discount > 0)
-//   image_url          ->  image (backend URL + /uploads/...)
+//   images [...]       ->  images (full URLs) + image (first one)
+//   image_url          ->  used only if the backend has no images array
 //   created_at         ->  isNew (true if created in the last NEW_DAYS days)
 //   sizes ["39","42"]  ->  sizes [39, 42]
 
-const API_URL = (
-  import.meta.env.VITE_BACKEND_API_URL || "https://server.velaroqa.com"
+export const API_URL = (
+  import.meta.env.BACKEND_API_URL || "https://server.velaroqa.com"
 ).replace(/\/$/, "");
+
+// Image gulo alada host e thakle .env e VITE_IMAGE_URL dao (na dile API_URL-i use hobe)
+export const IMAGE_URL = (import.meta.env.VITE_IMAGE_URL || API_URL).replace(/\/$/, "");
 
 export const NEW_DAYS = 7; // a product shows the "New" tag for this many days
 export const FEATURED_COUNT = 5; // how many random featured cards to show
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+// "/uploads/a.jpg" -> "https://server.velaroqa.com/uploads/a.jpg"
+const toUrl = (path) =>
+  !path ? "" : /^https?:\/\//i.test(path) ? path : `${IMAGE_URL}${path}`;
+
 /* ---------- Convert one API product into the shape the cards expect ---------- */
 export function normalizeProduct(raw) {
   const price = Number(raw.price) || 0;
   const discountPercent = Number(raw.discount) || 0;
-  const discountPrice = discountPercent > 0 ? Math.round(price * (100 - discountPercent)) / 100: undefined;
+  const discountPrice =
+    discountPercent > 0
+      ? Math.round(price * (100 - discountPercent)) / 100
+      : undefined;
   const createdAt = raw.created_at ? new Date(raw.created_at).getTime() : NaN;
-  const isNew = Number.isFinite(createdAt) && Date.now() - createdAt <= NEW_DAYS * DAY_MS;
+  const isNew =
+    Number.isFinite(createdAt) && Date.now() - createdAt <= NEW_DAYS * DAY_MS;
 
-  const imagePath = raw.image_url || "";
-  const image = /^https?:\/\//i.test(imagePath) ? imagePath : `${API_URL}${imagePath}`;
+  // images array thakle seta, na hole purono image_url
+  const images = (
+    Array.isArray(raw.images) && raw.images.length
+      ? raw.images
+      : raw.image_url
+      ? [raw.image_url]
+      : []
+  )
+    .filter(Boolean)
+    .map(toUrl);
+
+  const image = images[0] || "";
 
   const sizes = (Array.isArray(raw.sizes) ? raw.sizes : []).map((s) => {
     const n = Number(s);
@@ -41,7 +63,8 @@ export function normalizeProduct(raw) {
     price,
     discountPrice,
     isNew,
-    image,
+    image, // first image (cards use this)
+    images, // all images (product details gallery uses this)
     sizes,
     createdAt: raw.created_at,
   };
@@ -63,6 +86,8 @@ export async function fetchProducts(signal, { retries = 3, timeoutMs = 15000 } =
       const res = await fetch(`${API_URL}/api/products`, { signal: requestCtrl.signal });
       if (!res.ok) throw new Error(`Products request failed (${res.status})`);
       const data = await res.json();
+
+return (Array.isArray(data) ? data : []).map(normalizeProduct);
       return (Array.isArray(data) ? data : []).map(normalizeProduct);
     } catch (err) {
       if (signal?.aborted) throw err; // user left the page -> stop retrying

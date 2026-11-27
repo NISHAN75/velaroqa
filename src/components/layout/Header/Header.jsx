@@ -47,7 +47,7 @@ function IconButton({ label, children, onClick, className = "" }) {
       type="button"
       aria-label={label}
       onClick={onClick}
-      className={`relative flex h-10 w-10 items-center justify-center rounded-full text-[#0F172A] transition-colors duration-200 hover:bg-[#E0E7FF] hover:text-[#1D4ED8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] ${className}`}
+      className={`relative flex h-10 w-10 items-center justify-center rounded-full text-ink transition-colors duration-200 hover:bg-tint-strong hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${className}`}
     >
       {children}
     </button>
@@ -60,7 +60,7 @@ function SearchField({ value, onChange, onSubmit, className = "" }) {
     <form
       role="search"
       onSubmit={onSubmit}
-      className={`flex items-center gap-2 rounded-full bg-[#E8ECFF] px-4 py-2.5 text-[#0F172A] transition-shadow duration-200 focus-within:ring-2 focus-within:ring-[#2563EB] ${className}`}
+      className={`flex items-center gap-2 rounded-full bg-tint px-4 py-2.5 text-ink transition-shadow duration-200 focus-within:ring-2 focus-within:ring-primary ${className}`}
     >
       <button type="submit" aria-label="Search" className="shrink-0">
         <Search className="h-4 w-4 text-slate-500" />
@@ -142,8 +142,8 @@ export default function Header() {
                 (active) =>
                   `rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-200 ${
                     active
-                      ? "bg-[#E0E7FF] text-[#1D4ED8]"
-                      : "text-[#0F172A] hover:bg-[#EEF2FF] hover:text-[#1D4ED8]"
+                      ? "bg-tint-strong text-primary-dark"
+                      : "text-ink hover:bg-tint-soft hover:text-primary-dark"
                   }`
               )
             )}
@@ -187,8 +187,8 @@ export default function Header() {
                     (active) =>
                       `rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
                         active
-                          ? "bg-[#E0E7FF] text-[#1D4ED8]"
-                          : "text-[#0F172A] hover:bg-[#EEF2FF]"
+                          ? "bg-tint-strong text-primary-dark"
+                          : "text-ink hover:bg-tint-soft"
                       }`,
                     () => setMenuOpen(false)
                   )
@@ -196,11 +196,11 @@ export default function Header() {
               </nav>
               <div className="flex items-center gap-4 border-t border-slate-200 pt-3 text-xs font-medium text-slate-600">
                 {TOP_BAR_LINKS.map((l) => (
-                  <a key={l.label} href={l.href} className="hover:text-[#1D4ED8]">
+                  <a key={l.label} href={l.href} className="hover:text-primary-dark">
                     {l.label}
                   </a>
                 ))}
-                <span className="ml-auto rounded bg-[#E8ECFF] px-2 py-1 font-semibold text-[#0F172A]">
+                <span className="ml-auto rounded bg-tint px-2 py-1 font-semibold text-ink">
                   $ BDT
                 </span>
               </div>

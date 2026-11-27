@@ -282,7 +282,7 @@ export default function ChatBot() {
         aria-label={isOpen ? "Close velaro chat" : "Open velaro chat"}
         aria-expanded={isOpen}
         aria-controls="velaro-chat"
-        className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] right-4 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-[#1D4ED8] text-white shadow-lg shadow-blue-900/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#2563EB] hover:shadow-xl hover:shadow-blue-900/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 active:scale-95 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] sm:right-6"
+        className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] right-4 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-primary-dark text-white shadow-lg shadow-primary-darkest/30 transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary hover:shadow-xl hover:shadow-blue-900/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-95 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] sm:right-6"
       >
         <MessageCircle
           className={`absolute h-6 w-6 transition-all duration-200 ${
@@ -297,8 +297,8 @@ export default function ChatBot() {
 
         {unread && !isOpen && (
           <span className="absolute -right-0.5 -top-0.5 flex h-3.5 w-3.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#38BDF8] opacity-70 motion-reduce:animate-none" />
-            <span className="relative inline-flex h-3.5 w-3.5 rounded-full border-2 border-white bg-[#38BDF8]" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-70 motion-reduce:animate-none" />
+            <span className="relative inline-flex h-3.5 w-3.5 rounded-full border-2 border-white bg-accent" />
           </span>
         )}
       </button>

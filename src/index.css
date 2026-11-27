@@ -1,10 +1,66 @@
 @import "tailwindcss";
 
+/* ===== Brand colors: client color change korle SHUDHU ekhane change korben ===== */
+@theme static {
+  /* Brand */
+  --color-primary: #8b6220;
+  --color-primary-light: #a2762b;
+  --color-primary-dark: #73511a;
+  --color-primary-deeper: #5a3f14;
+  --color-primary-darkest: #35250c;
+  --color-accent: #d9b366;
+
+  /* Text / dark */
+  --color-ink: #1c1710;
+  --color-muted: #6b6558; /* warm gray: text-slate-500 er jaigai text-muted */
+
+  /* Backgrounds, borders, tints (light cream) */
+  --color-background: #fdf8ec;     /* website er main background */
+  --color-card: #fffdf7;           /* card, modal, dropdown */
+  --color-surface: #f6efdf;        /* alada section er background */
+  --color-line: #ebe2cc;
+  --color-tint: #f4ead2;
+  --color-tint-soft: #f9f2e1;
+
+  /* Light shades + extra neutrals (OrderModal e lagche) */
+  --color-primary-50: #faf5e9;
+  --color-primary-100: #f3e8cd;
+  --color-primary-200: #e9d6a8;
+  --color-surface-soft: #fbf5e7;
+  --color-line-strong: #d9ccab;
+
+  /* Promo banner button (theme color) */
+  --color-dark: var(--color-primary);
+  --color-dark-hover: var(--color-primary-dark);
+
+  /* Extra tints (hardcoded hex gula replace korte) */
+  --color-primary-300: #dbbd78;
+  --color-tint-strong: #efe2c2;   /* header hover, active pill */
+  --color-tint-border: #e2d3ac;   /* chat suggestion border, scrollbar */
+  --color-accent-50: #fbf4e2;
+  --color-accent-200: #f0dead;
+  --color-accent-300: #e6c987;
+
+  /* Hero gradient */
+  --color-hero-from: #0c0a07;
+  --color-hero-via: #241a0e;
+  --color-hero-to: #5c4220;
+
+  /* Category card gradient er extra shade */
+  --color-primary-mid: #4d3713;
+  --color-primary-mid2: #37280f;
+  --color-primary-night: #1d1509;
+
+  /* Non-brand (client change na korle o hoy, kintu ek jaigai thakuk) */
+  --color-star: #f5b301;
+  --color-online: #4ade80;
+}
+
 body {
   margin: 0;
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
-  background: #ffffff;
-  color: #0f172a;
+  background: var(--color-background);
+  color: var(--color-ink);
 }
 button:not(:disabled),
 [role="button"] {
@@ -32,11 +88,11 @@ html.lenis, html.lenis body {
 
 .os-theme-dark {
   --os-size: 10px;
-  --os-handle-bg: #1d4ed8;
-  --os-handle-bg-hover: #2563eb;
-  --os-handle-bg-active: #1e40af;
+  --os-handle-bg: var(--color-primary-dark);
+  --os-handle-bg-hover: var(--color-primary);
+  --os-handle-bg-active: var(--color-primary-deeper);
   --os-handle-border-radius: 9999px;
   --os-track-bg: transparent;
-  --os-track-bg-hover: rgba(29, 78, 216, 0.08);
+  --os-track-bg-hover: color-mix(in srgb, var(--color-primary-dark) 8%, transparent);
   --os-padding-perpendicular: 2px;
 }

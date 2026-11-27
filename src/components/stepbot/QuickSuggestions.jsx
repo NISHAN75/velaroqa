@@ -1,5 +1,5 @@
 const chipClass =
-  "rounded-full border border-[#C7D2FE] bg-white px-3.5 py-2 text-left text-[13px] font-semibold text-[#1D4ED8] transition-colors duration-200 hover:border-[#2563EB] hover:bg-[#E8ECFF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] active:scale-[0.97]";
+  "rounded-full border border-tint-border bg-white px-3.5 py-2 text-left text-[13px] font-semibold text-primary-dark transition-colors duration-200 hover:border-primary hover:bg-tint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary active:scale-[0.97]";
 
 /**
  * variant="grid"  -> wrapped chips shown under the welcome message

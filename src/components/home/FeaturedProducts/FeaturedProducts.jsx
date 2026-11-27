@@ -21,7 +21,7 @@ export default function FeaturedProducts() {
         <div className="mb-5">
           <h2
             id="featured-products-title"
-            className="mt-2 text-xl font-extrabold text-[#0F172A] sm:text-2xl"
+            className="mt-2 text-xl font-extrabold text-ink sm:text-2xl"
           >
             Featured Products
           </h2>

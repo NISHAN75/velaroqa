@@ -36,7 +36,7 @@ export default function RelatedProducts({ product, limit = 4 }) {
         <div className="mb-5">
           <h2
             id="related-products-title"
-            className="text-xl font-extrabold text-[#0F172A] sm:text-2xl"
+            className="text-xl font-extrabold text-ink sm:text-2xl"
           >
             Related Products
           </h2>
