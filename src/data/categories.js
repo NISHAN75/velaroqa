@@ -27,9 +27,9 @@ export const categories = [
   },
   {
     id: 4,
-    name: "snikar",
+    name: "Loafer",
     tagline: "Step Easy",
-    href: "/shop?category=snikar",
+    href: "/shop?category=loafer",
     image: "/images/categories/category-04.png",
     gradient: "from-[#2563EB] via-[#1D4ED8] to-[#0B2A8A]",
   },
